@@ -11,11 +11,11 @@
 #    import tmp102
 #    tmp102.read_temp()
 #    tmp102.read_temp('F')
-#    tmp102.init()
+#    tmp102.reset()
 
 import machine
 
-# Pin Definitions
+# Pin Definitions - There is only one I2C bus on the ESP32
 sda_pin = machine.Pin(21)
 scl_pin = machine.Pin(22)
 
@@ -68,12 +68,12 @@ def read_temp(scale='C'):  # Defaults to [C]elsius
 
 
 # Reset TMP102 configuration settings
-def init():
+def reset():
 
-    # Read CONFIG register (2 bytes) and convert to integer list
+    # Read CONFIG register (2 bytes) and convert to list
     val = i2c.readfrom_mem(tmp102_address, reg_config, 2)
-    print("Old CONFIG:", val)
     val = list(val)
+    print("Old CONFIG:", val, [bin(x) for x in val])
 
     # Set to 4Hz sampling (CR1, CR0 = 0b10)
     val[1] = val[1] & 0b00111111
@@ -84,5 +84,6 @@ def init():
 
     # Check that new config is in place
     val = i2c.readfrom_mem(tmp102_address, reg_config, 2)
-    print("New CONFIG:", val)
+    val = list(val)
+    print("New CONFIG:", val, [bin(x) for x in val])
 
