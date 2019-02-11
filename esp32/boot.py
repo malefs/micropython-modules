@@ -21,18 +21,18 @@ def wlan_connect(ssid, password):
     wlan = network.WLAN(network.STA_IF)
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
-        print('WiFi SSID:', ssid)
+        print('WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
         while not wlan.isconnected():
             pass
-    print('WiFi DHCP IP:', wlan.ifconfig()[0])
+    print('WiFi DHCP: ', wlan.ifconfig()[0])
 
     # Set clock using NTP
     import ntptime
     print("NTP Server:", ntptime.host)
     ntptime.settime()
     import utime
-    print('UTC Time: {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
+    print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
          
 
 # Suppress ESP debug messages in the REPL
