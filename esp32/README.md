@@ -12,3 +12,6 @@ screen /dev/ttyUSB0 115200
 Screen Commands:
 * Ctrl+a Shift+k - Terminate screen connection
  
+Other Commands:
+* help()  <-- Welcome to MicroPython screen
+* help('modules')  <-- List installed modules
