@@ -14,13 +14,13 @@ Screen Commands:
  
 REPL Commands:
 * Module Documentation:
-** help()  <-- Welcome to MicroPython screen
-** help('modules')  <-- List installed modules
-** import ntptime; help(ntptime)
+  * help()  <-- Welcome to MicroPython screen
+  * help('modules')  <-- List installed modules
+  * import ntptime; help(ntptime)
 * List file systems:
-** import sys 
-** sys.path
+  * import sys 
+  * sys.path
 * List files:
-** import uos
-** os.listdir('/')
+  * import uos
+  * os.listdir('/')
 
