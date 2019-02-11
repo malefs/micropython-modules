@@ -1,5 +1,5 @@
 
-# Useful info for MicroPython on the ESP32
+# Useful Info for MicroPython on the ESP32
 
 https://micropython.org/download/#esp32
 
