@@ -10,5 +10,5 @@ https://micropython.org/download/#esp32
 screen /dev/ttyUSB0 115200
 
 Screen Commands:
-* Ctrl+c Shift+k - Terminate screen connection
+* Ctrl+a Shift+k - Terminate screen connection
  
