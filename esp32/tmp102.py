@@ -19,15 +19,17 @@ import machine
 sda_pin = machine.Pin(21)
 scl_pin = machine.Pin(22)
 
-# Create and I2C object out of our SDA and SCL pin objects
+# Create an I2C object out of the SDA and SCL pin objects
 i2c = machine.I2C(sda=sda_pin, scl=scl_pin)
+
+# Scan the I2C bus for device addresses
 i2c_addresses = i2c.scan()
 
 # TMP102 address on the I2C bus (set by manufacturer)
 tmp102_address = 0x48
 
 if tmp102_address not in i2c_addresses:
-    raise Exception('No TMP102 device found on I2C bus')
+    raise Exception('No TMP102 device found on the I2C bus')
 
 # TMP102 register addresses
 reg_temp = 0x00
