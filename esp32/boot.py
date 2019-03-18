@@ -12,12 +12,18 @@
 #    Ctrl+a Shift+k to kill screen connection
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
+import esp
+import machine
 import micropython
+import network
+import ntptime
+import uos
+import utime
+
 micropython.alloc_emergency_exception_buf(100)
 
 # Connect to WiFI
 def wlan_connect(ssid, password):
-    import network
     wlan = network.WLAN(network.STA_IF)
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
@@ -27,18 +33,26 @@ def wlan_connect(ssid, password):
             pass
     print('WiFi DHCP: ', wlan.ifconfig()[0])
 
+def ntp():
     # Set clock using NTP
-    import ntptime
+    print('')
     print("NTP Server:", ntptime.host)
-    ntptime.settime()
-    import utime
+    try:
+        ntptime.settime()
+    except:
+        print("    Connection to %s failed" % ntptime.host)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
+    print('')
          
 
 # Suppress ESP debug messages in the REPL
 def no_debug():
-    import esp
     esp.osdebug(None)
 
 no_debug()
 wlan_connect('<SSID>', '<password>')
+ntp()
+
+print("List of files on this device:")
+print(uos.listdir('/'))
+print('')
