@@ -10,10 +10,10 @@ import tmp102
 
 unique_id = str(client.id())
 
-file = open('btree.db', 'r+b')
-db = btree.open(file)
+f = open('key_store.db', 'r+b')
+db = btree.open(f)
 
-broker = db['mqtt_broker'].decode('utf-8')
+broker = db[b'mqtt_broker'].decode('utf-8')
 topic = 'devices/' + unique_id
 
 timestamp = str(utime.time())   # Epoch UTC

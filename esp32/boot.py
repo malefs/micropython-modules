@@ -26,10 +26,10 @@ import uos
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 micropython.alloc_emergency_exception_buf(100)
 
-file = open('btree.db', 'r+b')
-db = btree.open(file)
-ssid_name = db['ssid_name'].decode('utf-8')
-ssid_pass = db['ssid_pass'].decode('utf-8')
+f = open('key_store.db', 'r+b')
+db = btree.open(f)
+ssid_name = db[b'ssid_name'].decode('utf-8')
+ssid_pass = db[b'ssid_pass'].decode('utf-8')
 db.close()
 
 # Connect to WiFI
