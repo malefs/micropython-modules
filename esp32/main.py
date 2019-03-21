@@ -1,17 +1,23 @@
+import utime
+print('main.py: Press CTRL+C to drop to REPL...')
+utime.sleep(3)
+
 import tmp102
 import machine
 import mqtt
-import utime
 import client
 
 while True:
     broker = '192.168.7.207'
-    topic = 'device/' + str(client.id()) + '/temp'
-    message = str(round(tmp102.read_temp('F'), 1))
+    topic = 'devices/' + str(client.id())
 
-    mqtt.publish(broker, topic, message)
+    timestamp = str(utime.time())   # Epoch UTC
+    mqtt.publish(broker, topic + '/time', timestamp) 
 
-    print("Sent %s to %s... going to sleep in 3 seconds..." % (message, topic))
-    utime.sleep(3)
-    machine.lightsleep(10000)
+    temp = str(round(tmp102.read_temp('F'), 1))
+    mqtt.publish(broker, topic + '/temp', temp)
+
+    print(timestamp, temp)
+    utime.sleep(1)  # Give UART time to print text before going to sleep
+    machine.deepsleep(300000)
 

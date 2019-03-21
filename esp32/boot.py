@@ -11,15 +11,18 @@
 # screen /dev/ttyUSB0 115200
 #    Ctrl+a Shift+k to kill screen connection
 
-# Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
+import utime
+print('boot.py: Press CTRL+C to drop to REPL...')
+utime.sleep(3)
+
 import esp
 import machine
 import micropython
 import network
 import ntptime
 import uos
-import utime
 
+# Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 micropython.alloc_emergency_exception_buf(100)
 
 # Connect to WiFI
@@ -36,11 +39,11 @@ def wlan_connect(ssid, password):
 def ntp():
     # Set clock using NTP
     print('')
+    ntptime.host = '192.168.7.1'
     print("NTP Server:", ntptime.host)
-    try:
+    while utime.time() < 10000:
         ntptime.settime()
-    except:
-        print("    Connection to %s failed" % ntptime.host)
+        utime.sleep(1)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print('')
          
@@ -50,7 +53,7 @@ def no_debug():
     esp.osdebug(None)
 
 no_debug()
-wlan_connect('<SSID>', '<password>')
+wlan_connect('<SSID>', '<PASSWORD>')
 ntp()
 
 print("List of files on this device:")
