@@ -36,12 +36,12 @@ def wlan_connect(ssid, password):
             pass
     print('WiFi DHCP: ', wlan.ifconfig()[0])
 
+# Set RTC using NTP
 def ntp():
-    # Set clock using NTP
     print('')
     ntptime.host = '192.168.7.1'
     print("NTP Server:", ntptime.host)
-    while utime.time() < 10000:
+    while utime.time() < 10000:  # Retry until clock is set
         ntptime.settime()
         utime.sleep(1)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
@@ -57,5 +57,5 @@ wlan_connect('<SSID>', '<PASSWORD>')
 ntp()
 
 print("List of files on this device:")
-print(uos.listdir('/'))
+print('   %s' % '\n   '.join(map(str, sorted(uos.listdir('/')))))
 print('')
