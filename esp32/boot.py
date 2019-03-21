@@ -15,6 +15,7 @@ import utime
 print('boot.py: Press CTRL+C to drop to REPL...')
 utime.sleep(3)
 
+import btree
 import esp
 import machine
 import micropython
@@ -24,6 +25,12 @@ import uos
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 micropython.alloc_emergency_exception_buf(100)
+
+file = open('btree.db', 'r+b')
+db = btree.open(file)
+ssid_name = db['ssid_name'].decode('utf-8')
+ssid_pass = db['ssid_pass'].decode('utf-8')
+db.close()
 
 # Connect to WiFI
 def wlan_connect(ssid, password):
@@ -53,7 +60,7 @@ def no_debug():
     esp.osdebug(None)
 
 no_debug()
-wlan_connect('<SSID>', '<PASSWORD>')
+wlan_connect(ssid_name, ssid_pass)
 ntp()
 
 print("List of files on this device:")

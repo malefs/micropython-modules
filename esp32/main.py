@@ -2,22 +2,30 @@ import utime
 print('main.py: Press CTRL+C to drop to REPL...')
 utime.sleep(3)
 
-import tmp102
+import btree
+import client
 import machine
 import mqtt
-import client
+import tmp102
 
-while True:
-    broker = '192.168.7.207'
-    topic = 'devices/' + str(client.id())
+unique_id = str(client.id())
 
-    timestamp = str(utime.time())   # Epoch UTC
-    mqtt.publish(broker, topic + '/time', timestamp) 
+file = open('btree.db', 'r+b')
+db = btree.open(file)
 
-    temp = str(round(tmp102.read_temp('F'), 1))
-    mqtt.publish(broker, topic + '/temp', temp)
+broker = db['mqtt_broker'].decode('utf-8')
+topic = 'devices/' + unique_id
 
-    print(timestamp, temp)
-    utime.sleep(1)  # Give UART time to print text before going to sleep
-    machine.deepsleep(300000)
+timestamp = str(utime.time())   # Epoch UTC
+mqtt.publish(broker, topic + '/time', timestamp) 
 
+temp = str(round(tmp102.read_temp('F'), 1))
+mqtt.publish(broker, topic + '/temp', temp)
+
+db[str(timestamp)] = str(temp) 
+db.flush()
+db.close()
+
+print(timestamp, temp)
+utime.sleep(1)  # Give UART time to print text before going to sleep
+machine.deepsleep(300000)    # Reset on Wake
