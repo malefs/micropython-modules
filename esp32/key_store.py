@@ -18,7 +18,7 @@ def update():
     db.close()
 
 
-# This just prints to the screen. Output is not usable in scripts.
+# This just prints to the screen which is not usable in scripts.
 def dump():
     f = open(file, 'r+b')
     db = btree.open(f)
@@ -28,6 +28,8 @@ def dump():
 
 
 # This returns a Dictionary list that is usable in scripts.
+# It also creates a key_store.txt file dump that ampy can retrieve:
+#      ampy -p /dev/ttyUSB0 get key_store.txt
 def dict():
     f = open(file, 'r+b')
     db = btree.open(f)
@@ -36,7 +38,6 @@ def dict():
         pair = {key.decode('utf-8'): db[key].decode('utf-8')}
         list.update(pair)
     db.close()
-    # Text file can be retrieved with: ampy -p /dev/ttyUSB0 get key_store.txt
     with open('key_store.txt', 'wt') as text:
         text.write(str(list))
     return list
