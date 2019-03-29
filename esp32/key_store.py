@@ -26,22 +26,14 @@ def dump():
         print(key.decode('utf-8'), db[key].decode('utf-8'))
     db.close()
 
-
-# This returns a Dictionary list that is usable in scripts.
-# It also creates a key_store.txt file dump that ampy can retrieve:
-#      ampy -p /dev/ttyUSB0 get key_store.txt
-def dict():
+def text():
     f = open(file, 'r+b')
     db = btree.open(f)
-    list = {}
-    for key in db:
-        pair = {key.decode('utf-8'): db[key].decode('utf-8')}
-        list.update(pair)
-    db.close()
     with open('key_store.txt', 'wt') as text:
-        text.write(str(list))
-    return list
-
+        for key in db:
+            pair = "{}:{}\n".format(key.decode('utf-8'), db[key].decode('utf-8'))
+            text.write(pair)
+    db.close()
 
 def remove():
     import uos

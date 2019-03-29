@@ -1,4 +1,5 @@
 key_store.db
+key_store.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
