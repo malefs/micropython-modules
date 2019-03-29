@@ -12,6 +12,9 @@
 #    tmp102.read_temp()
 #    tmp102.read_temp('F')
 #    tmp102.reset()
+#
+# This module just gets a reading from the temperature sensor.
+# 
 
 import machine
 

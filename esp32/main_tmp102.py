@@ -1,3 +1,17 @@
+# SparkFun ESP32 Thing: https://www.sparkfun.com/products/13907
+# MicroPython:          https://docs.micropython.org/en/latest/
+#
+# Brandon Gant
+# 2019-03-28
+#
+# Usage:
+#    ampy -p /dev/ttyUSB0 put main_tmp102.py /main.py
+#
+# Temperature Logger:
+# This script uses a TMP102 sensor to check the temperature every five minutes
+# and log the results to an MQTT server as well as locally.
+#
+
 import utime
 print('main.py: Press CTRL+C to drop to REPL...')
 utime.sleep(3)

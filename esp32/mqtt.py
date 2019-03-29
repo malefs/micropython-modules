@@ -9,6 +9,9 @@
 # Usage:
 #    import mqtt
 #    mqtt.publish('192.168.1.50', 'test/light', 'off')
+#
+# This script just provides a modular way to send data to a MQTT server
+#
 
 from umqtt.simple import MQTTClient
 import client

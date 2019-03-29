@@ -1,4 +1,17 @@
-# This file creates, dumps, and removes the key_store.db file
+# MicroPython:          https://docs.micropython.org/en/latest/
+#
+# Brandon Gant
+# 2019-03-28
+#
+# Usage:
+#    import key_store
+#    key_store.update()   <-- Creates key_store.db if it does not exist
+#    key_store.print()    <-- Prints contents of key_store.db to screen
+#    key_store.text()     <-- Dumps contents of key_store.db to key_store.txt which ampy can retrieve
+#    key_store.remove()   <-- Removes key_store.db file
+#
+# This script just provides a way to log everything locally if needed.
+#
 
 import btree
 

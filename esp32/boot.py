@@ -1,4 +1,5 @@
-# ESP32 running MicroPython 
+# SparkFun ESP32 Thing: https://www.sparkfun.com/products/13907
+# MicroPython:          https://docs.micropython.org/en/latest/
 #
 # Brandon Gant
 # 2019-02-08
@@ -7,9 +8,11 @@
 # Source: https://boneskull.com/micropython-on-esp32-part-1/
 # Source: https://docs.micropython.org/en/latest/library/network.WLAN.html
 #
-# /home/pi/.local/bin/ampy --port /dev/ttyUSB0 put boot.py
-# screen /dev/ttyUSB0 115200
-#    Ctrl+a Shift+k to kill screen connection
+# Usage:
+#     /home/pi/.local/bin/ampy --port /dev/ttyUSB0 put boot.py
+#     screen /dev/ttyUSB0 115200
+#         (Ctrl+a Shift+k to kill screen connection)
+#
 
 import utime
 print('boot.py: Press CTRL+C to drop to REPL...')
