@@ -17,11 +17,11 @@ try:
     broker = db[b'mqtt_broker'].decode('utf-8')
     topic = 'devices/' + unique_id
 
-    timestamp = str(utime.time())   # Epoch UTC
-    mqtt.publish(broker, topic + '/time', timestamp) 
+    timestamp = utime.time()   # Epoch UTC
+    mqtt.publish(broker, topic + '/temp/timestamp', str(timestamp)) 
 
-    temp = str(round(tmp102.read_temp('F'), 1))
-    mqtt.publish(broker, topic + '/temp', temp)
+    temp = round(tmp102.read_temp('F'), 1)
+    mqtt.publish(broker, topic + '/temp/value', str(temp))
 
     db[str(timestamp)] = str(temp) 
     db.flush()
