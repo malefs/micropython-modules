@@ -12,6 +12,11 @@
 # This script uses a Milone eTape with Volage Divider to monitor the level 
 # of water in a home sump pit.
 #
+# Pinout:
+#    Red   --> 3.3V
+#    Black --> GND
+#    White --> GPIO36  (any ADC pin 32-39 will work)
+#
 
 import utime
 from machine import ADC
