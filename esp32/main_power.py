@@ -23,7 +23,7 @@ import mqtt
 import utime
 
 # 2.5V Input Pin (any GPIO pin should work)
-pin = Pin(4, Pin.IN)
+pin = Pin(37, Pin.IN)
 
 # Get Unique Client ID
 unique_id = str(client.id())
@@ -59,5 +59,5 @@ while True:
 
         last_power_status = current_power_status
 
-    utime.sleep(1) 
+    utime.sleep(0.5) 
 
