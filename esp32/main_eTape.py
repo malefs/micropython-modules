@@ -18,12 +18,12 @@
 #    White --> GPIO36  (any ADC pin 32-39 will work)
 #
 
+import machine
 import utime
-from machine import ADC
 
-adc = ADC(Pin(36))
-adc.atten(ADC.ATTN_11DB)   # 0V to 3.3V range
-adc.width(ADC.WIDTH_12BIT) # 0  to 4095 bits read
+adc = machine.ADC(machine.Pin(36))
+adc.atten(machine.ADC.ATTN_11DB)   # 0V to 3.3V range
+adc.width(machine.ADC.WIDTH_12BIT) # 0  to 4095 bits read
 
 while True:
     adc.read()
