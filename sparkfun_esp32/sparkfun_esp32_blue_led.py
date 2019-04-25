@@ -1,6 +1,6 @@
 #
 # Usage:
-#   from blue_led import blue_led
+#   from sparkfun_esp32_blue_led import blue_led
 #   blue_led(1)
 #   blue_led(0)
 
