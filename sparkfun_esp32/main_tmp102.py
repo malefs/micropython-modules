@@ -21,7 +21,7 @@ try:
     import client
     import machine
     import mqtt
-    import tmp102
+    import sparkfun_tmp102
 
     unique_id = str(client.id())
 
@@ -34,7 +34,7 @@ try:
     timestamp = utime.time()   # Epoch UTC
     mqtt.publish(broker, topic + '/temp/timestamp', str(timestamp)) 
 
-    temp = round(tmp102.read_temp('F'), 1)
+    temp = round(sparkfun_tmp102.read_temp('F'), 1)
     mqtt.publish(broker, topic + '/temp/value', str(temp))
 
     db[str(timestamp)] = str(temp) 
