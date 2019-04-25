@@ -25,8 +25,10 @@ async def main(client):
     while True:
         await asyncio.sleep(5)
         print('publish', n)
+        timestamp = str(utime.time())
+        key_store.set(timestamp, str(n))
         # If WiFi is down the following will pause for the duration.
-        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/demo/timestamp', str(utime.time()), qos = 1)
+        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/demo/timestamp', timestamp, qos = 1)
         await client.publish('devices/' + config['client_id'].decode('utf-8') + '/demo/value', '{}'.format(n), qos = 1)
         n += 1
 
