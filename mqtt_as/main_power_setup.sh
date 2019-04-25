@@ -4,7 +4,7 @@ esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
 sleep 7
 esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 ~/Downloads/esp32-bluetooth.bin 
 
-echo "Waiting 20 seconds for reboot..."
+echo "Waiting 20 seconds for reboot and reconnection..."
 sleep 20
 
 echo "Creating uasyncio directory..."
