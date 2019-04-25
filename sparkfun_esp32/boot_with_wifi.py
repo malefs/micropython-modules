@@ -20,6 +20,7 @@ utime.sleep(3)
 
 import btree
 import esp
+import key_store
 import machine
 import micropython
 import network
@@ -29,11 +30,8 @@ import uos
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 micropython.alloc_emergency_exception_buf(100)
 
-f = open('key_store.db', 'r+b')
-db = btree.open(f)
-ssid_name = db[b'ssid_name'].decode('utf-8')
-ssid_pass = db[b'ssid_pass'].decode('utf-8')
-db.close()
+ssid_name = key_store.get('ssid_name')
+ssid_pass = key_store.get('ssid_pass')
 
 # Connect to WiFI
 def wlan_connect(ssid, password):
@@ -49,7 +47,7 @@ def wlan_connect(ssid, password):
 # Set RTC using NTP
 def ntp():
     print('')
-    ntptime.host = '192.168.7.1'
+    ntptime.host = key_store.get('ntp_host')
     print("NTP Server:", ntptime.host)
     while utime.time() < 10000:  # Retry until clock is set
         ntptime.settime()
