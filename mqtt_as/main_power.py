@@ -48,9 +48,11 @@ async def main(client):
     await client.connect()
     ntp()
 
-    # Main loop that publishes to broker
+    # Define variables as global to avoid NameError
     global current_power_status
     global last_power_status
+
+    # Main loop that publishes to broker
     while True:
         current_power_status = pin.value()
         if current_power_status != last_power_status:
