@@ -24,18 +24,6 @@ import uasyncio as asyncio
 import utime
 import ntptime
 
-# Turn OFF blue led 
-#    ON Full means Wifi is DISCONNECTED
-#    ON Weak means device has crashed
-blue_led(0)
-
-# 2.5V Input Pin (any GPIO pin should work)
-pin = Pin(37, Pin.IN)
-
-# Initialize variables (assume power is currently on)
-current_power_status = 1
-last_power_status = 1
-
 # Set RTC using NTP
 def ntp():
     ntptime.host = key_store.get('ntp_host')
@@ -55,9 +43,17 @@ async def main(client):
     await client.connect()
     ntp()
 
-    # Define variables as global to avoid NameError
-    global current_power_status
-    global last_power_status
+    # 2.5V Input Pin (any GPIO pin should work)
+    pin = Pin(37, Pin.IN)
+
+    # Initialize variables (assume power is currently on)
+    current_power_status = 1
+    last_power_status = 1
+    
+    # Turn OFF blue led
+    #    ON Full means Wifi is DISCONNECTED
+    #    ON Weak means device has crashed
+    blue_led(0)
 
     # Main loop that publishes to broker
     print("Monitoring Power...")
