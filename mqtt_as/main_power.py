@@ -25,12 +25,12 @@ import utime
 import ntptime
 
 # Set RTC using NTP
-def ntp():
+async def ntp():
     ntptime.host = key_store.get('ntp_host')
     print("NTP Server:", ntptime.host)
     while utime.time() < 10000:  # Retry until clock is set
         ntptime.settime()
-        utime.sleep(1)
+        await asyncio.sleep(1)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
 
 # Enable blue_led if Wifi is DISCONNECTED
@@ -41,7 +41,7 @@ async def wifi_handler(state):
 async def main(client):
     # Called once on startup
     await client.connect()
-    ntp()
+    await ntp()
 
     # 2.5V Input Pin (any GPIO pin should work)
     pin = Pin(37, Pin.IN)
