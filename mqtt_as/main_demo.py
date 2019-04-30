@@ -3,6 +3,7 @@
 #
 
 import key_store
+import micropython
 from mqtt_as import MQTTClient, config
 import uasyncio as asyncio
 import utime

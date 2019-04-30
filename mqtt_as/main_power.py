@@ -19,6 +19,7 @@
 from sparkfun_esp32_blue_led import blue_led
 import key_store
 from machine import Pin
+import micropython
 from mqtt_as import MQTTClient, config
 import uasyncio as asyncio
 import utime
