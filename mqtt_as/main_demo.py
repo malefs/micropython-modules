@@ -1,8 +1,15 @@
+#
+# Source: https://github.com/peterhinch/micropython-mqtt/blob/master/mqtt_as/clean.py
+#
+
 import key_store
 from mqtt_as import MQTTClient, config
 import uasyncio as asyncio
 import utime
 import ntptime
+
+# Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
+micropython.alloc_emergency_exception_buf(100)
 
 # Set RTC using NTP
 def ntp():
