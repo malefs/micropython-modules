@@ -25,11 +25,13 @@ ampy -p /dev/ttyUSB0 put ~/source/micropython-modules/key_store.py
 echo "Loading sparkfun_esp32_blue_led.py..."
 ampy -p /dev/ttyUSB0 put ~/source/micropython-modules/sparkfun_esp32/sparkfun_esp32_blue_led.py 
 
-echo "Loading main_power.py..."
-ampy -p /dev/ttyUSB0 put ~/source/micropython-modules/mqtt_as/main_power.py /main.py
+#echo "Loading main_power.py..."
+#ampy -p /dev/ttyUSB0 put ~/source/micropython-modules/mqtt_as/main_power.py /main.py
 
 echo "Manually run the following commands to initialize settings:"
 echo "   screen /dev/ttyUSB0 115200"
 echo "   import key_store"
 echo "   key_store.init()"
+echo ""
+echo "Manually add your own main.py file"
 
