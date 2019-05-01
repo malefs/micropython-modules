@@ -60,16 +60,16 @@ async def main(client):
     blue_led(0)
 
     # Main loop that publishes to broker
-    print("Monitoring Power...")
+    print("Monitoring water level...")
     while True:
         await asyncio.sleep(2)
-        current_level = adc.read()
+        current_water_level = adc.read()
         timestamp = str(utime.time())
         #key_store.set(timestamp, str(current_power_status))
 
         # If WiFi is down the following will pause for the duration.
-        #await client.publish('devices/' + config['client_id'].decode('utf-8') + '/level/timestamp', timestamp, qos = 1)
-        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/level/value', str(current_power_status), qos = 1)
+        #await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/timestamp', timestamp, qos = 1)
+        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/value', str(current_water_level), qos = 1)
 
 # Override default mqtt_as.py config variable settings
 config['wifi_coro'] = wifi_handler
