@@ -52,7 +52,7 @@ async def main(client):
     # any ADC pin 32-39 should work
     adc = machine.ADC(machine.Pin(36))
     adc.atten(machine.ADC.ATTN_11DB)   # 0V to 3.3V range
-    adc.width(machine.ADC.WIDTH_12BIT) # 0  to 4095 bits read
+    adc.width(machine.ADC.WIDTH_10BIT) # 0  to 1023 bits read
 
     # Turn OFF blue led
     #    ON Full means Wifi is DISCONNECTED
