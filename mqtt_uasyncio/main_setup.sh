@@ -3,7 +3,7 @@
 if [ $1 == "erase" ]
 then
 esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
-sleep 7
+sleep 1
 esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 ~/Downloads/esp32-bluetooth.bin 
 fi
 
@@ -15,13 +15,13 @@ echo "Creating uasyncio directory..."
 ampy -p /dev/ttyUSB0 mkdir uasyncio
 
 echo "Loading __init__.py..."
-$AMPY put ~/source/micropython-modules/mqtt_as/uasyncio/__init__.py uasyncio/__init__.py
+$AMPY put ~/source/micropython-lib/uasyncio/uasyncio/__init__.py uasyncio/__init__.py
 
 echo "Loading core.py..."
-$AMPY put ~/source/micropython-modules/mqtt_as/uasyncio/core.py uasyncio/core.py
+$AMPY put ~/source/micropython-lib/uasyncio.core/uasyncio/core.py uasyncio/core.py
 
 echo "Loading mqtt_as.py..."
-$AMPY put ~/source/micropython-modules/mqtt_as/mqtt_as.py 
+$AMPY put ~/source/micropython-mqtt/mqtt_as/mqtt_as.py 
 
 echo "Loading key_store.py..."
 $AMPY put ~/source/micropython-modules/key_store.py 
