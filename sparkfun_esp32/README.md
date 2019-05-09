@@ -22,5 +22,5 @@ REPL Commands:
   * sys.path
 * List files:
   * import uos
-  * os.listdir('/')
+  * uos.listdir('/')
 
