@@ -53,6 +53,7 @@ async def main(client):
     # Initialize variables (assume power is currently on)
     current_power_status = 1
     last_power_status = 1
+    counter = 0
     
     # Turn OFF blue led
     #    ON Full means Wifi is DISCONNECTED
@@ -64,14 +65,20 @@ async def main(client):
     while True:
         await asyncio.sleep_ms(100)
         current_power_status = pin.value()
+
+        # Local timestamps when power fails and is restored
         if current_power_status != last_power_status:
             timestamp = str(utime.time())
             key_store.set(timestamp, str(current_power_status))
-
-            # If WiFi is down the following will pause for the duration.
-            await client.publish('devices/' + config['client_id'].decode('utf-8') + '/power/timestamp', timestamp, qos = 1)
-            await client.publish('devices/' + config['client_id'].decode('utf-8') + '/power/value', str(current_power_status), qos = 1)
             last_power_status = current_power_status
+
+        # MQTT pings every 2 seconds of current power status
+        if counter >= 2000:  # elapsed milliseconds
+            # If WiFi is down the following will pause for the duration.
+            await client.publish('devices/' + config['client_id'].decode('utf-8') + '/power/value', str(current_power_status), qos = 1)
+            counter = 0
+        else:
+            counter += 100
 
 # Override default mqtt_as.py config variable settings
 config['wifi_coro'] = wifi_handler
