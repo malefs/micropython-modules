@@ -78,7 +78,7 @@ async def main(client):
             await client.publish('devices/' + config['client_id'].decode('utf-8') + '/power/value', str(current_power_status), qos = 1)
             counter = 0
         else:
-            counter += 100
+            counter += 100  # Since we are waiting 100ms in asyncio.sleep_ms(100)
 
 # Override default mqtt_as.py config variable settings
 config['wifi_coro'] = wifi_handler
