@@ -14,6 +14,12 @@
 #
 # This script keeps private settings out of github and also logs everything locally if needed.
 #
+# Timestamps are in Embedded Epoch Time (seconds since 2000-01-01 00:00:00 UTC) as opposed to
+# Unix/POSIX Epoch Time (seconds since 1970-01-01 00:00:00 UTC).
+#
+#    utime.localtime()
+#    utime.localtime(611934744)  <-- Both are in UTC timezone
+#
 
 import btree
 
