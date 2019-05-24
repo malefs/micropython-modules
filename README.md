@@ -1,4 +1,5 @@
-# A Place to Store MicroPython Modules
+# Micropython Work
 
-As I learn about MicroPython, I am creating various reusable modules that I can import as needed.
+This repository holds the files of Micropython projects I am working on.
 
+![Sparkfun ESP32](https://github.com/bgant/micropython-modules/blob/master/mqtt_uasyncio/main_power.png)
