@@ -45,10 +45,10 @@ async def wifi_handler(state):
     await asyncio.sleep(1)
 
 # Manual measurements of etape ADC values at half-inch increments
-async def conversion(raw_adc):
-    if       raw_adc >= 569 and raw_adc < 579: inches = 8.5   # Normal summer water level
+def conversion(raw_adc):
+    if       raw_adc >= 569 and raw_adc < 583: inches = 8.5   # Normal summer water level
     elif     raw_adc >= 563 and raw_adc < 569: inches = 8.0   # 
-    elif     raw_adc >= 579 and raw_adc < 589: inches = 9.0   # Main Sump switches  on at 585
+    elif     raw_adc >= 583 and raw_adc < 589: inches = 9.0   # Main Sump switches  on at about 585
     elif     raw_adc >= 498 and raw_adc < 563:                # Main Sump switches off at 498 and fills with water
         if   raw_adc >= 498 and raw_adc < 502: inches = 4.0
         elif raw_adc >= 502 and raw_adc < 512: inches = 4.5
@@ -111,13 +111,14 @@ async def main(client):
     while True:
         await asyncio.sleep(2)
         timestamp = str(utime.time())
-        current_water_level = adc.read()
+        current_raw_adc = adc.read()
+        current_inches  = conversion(current_raw_adc)
         #key_store.set(timestamp, str(current_water_level))
 
         # If WiFi is down the following will pause for the duration.
         #await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/timestamp', timestamp, qos = 1)
-        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/raw_adc', str(current_water_level), qos = 1)
-        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/inches', str(conversion(current_water_level), qos = 1)
+        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/raw_adc', str(current_raw_adc), qos = 1)
+        await client.publish('devices/' + config['client_id'].decode('utf-8') + '/water/inches',  str(current_inches),  qos = 1)
 
 # Override default mqtt_as.py config variable settings
 config['wifi_coro'] = wifi_handler
