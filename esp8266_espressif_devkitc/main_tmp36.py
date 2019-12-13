@@ -31,7 +31,7 @@ def main():
     get_request = str.encode(get_request)  # Convert Type str to bytes
 
     # Send the Data to ThingSpeak
-    print('Sending Temp %s to %s' % (tempf, server))
+    print('Sending Temperature %sF to %s' % (tempf, server))
     send_data(server, get_request)
 
 
@@ -73,8 +73,14 @@ def send_data(server, get_request, use_stream=True):
     #print(response_text)
     status = [ line for line in response_text.split('\r\n') if "Status" in line ]
     print('HTTPS', status[0])
+    print()
+    print('==================================================')
+    print()
 
     s.close()
 
+# ThingSpeak free tier limited to 15 seconds between data updates
+while True:
+    main()
+    sleep(30)
 
-main()
