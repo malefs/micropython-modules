@@ -23,16 +23,26 @@ server = 'api.thingspeak.com'
 
 
 def main():
+    print('=============================================')
+    print()
+
     # Read the Temperature
     tempf = read_temp()
+    print('Temperature Reading: %sF' % tempf)
 
     # Create the HTTPS GET Request string
     get_request = 'GET /update?api_key=' + thingspeak_api_key + '&field1=' + tempf + ' HTTP/1.0\r\n\r\n'
     get_request = str.encode(get_request)  # Convert Type str to bytes
 
     # Send the Data to ThingSpeak
-    print('Sending Temperature %sF to %s' % (tempf, server))
-    send_data(server, get_request)
+    print('Server Connection:', server)
+    status = send_data(server, get_request)
+
+    if status:
+        print('Status: Success')
+    else:
+        print('Status: Failed')
+    print()
 
 
 def read_temp():
@@ -69,15 +79,15 @@ def send_data(server, get_request, use_stream=True):
         s.send(get_request)   # Must be bytes instead of string
         response_bytes = s.recv(4096)
 
+    s.close()
     response_text = response_bytes.decode()
     #print(response_text)
     status = [ line for line in response_text.split('\r\n') if "Status" in line ]
-    print('HTTPS', status[0])
-    print()
-    print('==================================================')
-    print()
+    if status[0] == 'Status: 200 OK':
+        return True
+    else:
+        return False
 
-    s.close()
 
 # ThingSpeak free tier limited to 15 seconds between data updates
 while True:
