@@ -91,6 +91,10 @@ def send_data(server, get_request, use_stream=True):
 
 # ThingSpeak free tier limited to 15 seconds between data updates
 while True:
-    main()
-    sleep(30)
+    try:
+        main()
+        sleep(60)
+    except:
+        sleep(60)
+        machine.reset()
 
