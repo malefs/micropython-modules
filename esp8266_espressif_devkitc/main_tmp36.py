@@ -49,11 +49,11 @@ def read_temp():
     # I am using the range_map() function below with measured datapoints:
     #   ADC 217 is 750mV at 25C/77F
     #   ADC 162 is 558mV at  7C/44F
-    #   ADC 132 is 455mV at -4C/25F
+    #   ADC 132 is 455mV at -4C/27F
 
     adc = ADC(0)
     temp = adc.read()      # ADC value from 0 to 1023
-    temp = range_map(temp, 132, 217, 25, 77)  # Conversion to Fahrenheit
+    temp = range_map(temp, 132, 217, 27, 77)  # Conversion to Fahrenheit
     temp = round(temp, 1)  # Rounding to one decimal place
     temp = str(temp)       # Convert to string to put into URL field1
     return temp            # Return Temperature in Fahrenheit
