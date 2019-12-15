@@ -14,13 +14,13 @@ from machine import ADC
 from time import sleep
 
 # Get ThingSpeak API Key
+import btree
 f = open('key_store.db', 'r+b')
 db = btree.open(f)
 thingspeak_api_key = db[b'thingspeak_api_key'].decode('utf-8')
 db.close()
 
 server = 'api.thingspeak.com'
-
 
 def main():
     print('=============================================')
@@ -46,13 +46,17 @@ def main():
 
 
 def read_temp():
+    # I am using the range_map() function below with measured datapoints:
+    #   ADC 217 is 750mV at 25C/77F
+    #   ADC 162 is 558mV at  7C/44F
+    #   ADC 132 is 455mV at -4C/25F
+
     adc = ADC(0)
-    temp = adc.read()/10      # Divide TMP36 voltage reading by 10 for Celsius
-    temp = (temp * 9/5) + 32  # Covert from Celsius to Fahrenheit
-    temp = temp * 1.07        # Increase value by 7% to match TMP102 readings and actual temperature
-    temp = round(temp)        # Round to remove decimals
-    temp = str(temp)          # Convert to string to put into URL field1
-    return temp
+    temp = adc.read()      # ADC value from 0 to 1023
+    temp = range_map(temp, 132, 217, 25, 77)  # Conversion to Fahrenheit
+    temp = round(temp, 1)  # Rounding to one decimal place
+    temp = str(temp)       # Convert to string to put into URL field1
+    return temp            # Return Temperature in Fahrenheit
 
 
 def send_data(server, get_request, use_stream=True):
@@ -87,6 +91,11 @@ def send_data(server, get_request, use_stream=True):
         return True
     else:
         return False
+
+
+# Python equivalent to Arduino map() function of two scales:
+def range_map(x, in_min, in_max, out_min, out_max):
+    return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min
 
 
 # ThingSpeak free tier limited to 15 seconds between data updates
