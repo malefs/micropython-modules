@@ -93,7 +93,9 @@ def send_data(server, get_request, use_stream=True):
         return False
 
 
-# Python equivalent to Arduino map() function of two scales:
+# Re-maps a number from one range to another.
+# Python equivalent to Arduino map() function.
+# Source: https://www.arduino.cc/reference/en/language/functions/math/map/
 def range_map(x, in_min, in_max, out_min, out_max):
     return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min
 
