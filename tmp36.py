@@ -1,3 +1,7 @@
+#
+# Brandon Gant
+# 2019-12-18
+#
 
 from sys import exit
 from machine import ADC
