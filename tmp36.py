@@ -40,7 +40,7 @@ def read_temp(gpio_pin_number, scale='c'):
         #   ADC 162 is 558mV at  7C/44F
         #   ADC 132 is 455mV at -4C/27F
 
-        adc = ADC(0)
+        adc = ADC(0)  # gpio_pin_number is ignored since there is only one ADC on ESP8266
         temp = adc.read()  # ADC value from 0 to 1023
         if scale.lower() is 'f':
             temp = range_map(temp, 132, 217, 27, 77)  # ADC Conversion to Fahrenheit
