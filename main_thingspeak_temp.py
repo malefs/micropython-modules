@@ -47,6 +47,7 @@ def main():
     status = [ line for line in response_text.split('\r\n') if "Status" in line ]
     if '200 OK' in status[0]:
         print('Status: Success')
+        print()
     else:
         print('Status: Failed')
         sleep(60)
