@@ -12,6 +12,7 @@ import http_client
 import tmp36
 from time import sleep
 from sys import exit
+from machine import reset
 
 # Get ThingSpeak API Key
 import btree
@@ -21,6 +22,9 @@ thingspeak_api_key = db[b'thingspeak_api_key'].decode('utf-8')
 db.close()
 
 server = 'api.thingspeak.com'
+
+sleep_interval = 60
+periodic_reset = 360  # with 60 second sleep, reset every 6 hours (just in case)
 
 def main():
     print('=============================================')
@@ -50,17 +54,21 @@ def main():
         print()
     else:
         print('Status: Failed')
-        sleep(60)
-        from machine import reset
+        sleep(sleep_interval)
         reset()
 
 
 # ThingSpeak free tier limited to 15 seconds between data updates
+counter = 0
 while True:
     try:
         main()
-        sleep(60)
+        counter += 1
+        sleep(sleep_interval)
+
+        if counter > periodic_reset:  # Reset on a schedule just in case
+            reset() 
     except:
-        sleep(60)
-        machine.reset()
+        sleep(sleep_interval)
+        reset()
 
