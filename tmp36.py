@@ -6,8 +6,9 @@
 from sys import exit
 from machine import ADC
 from uos import uname
+from time import sleep
 
-def read_temp(gpio_pin_number, scale='c'):
+def read_temp(gpio_pin_number, scale='c', in_min=205, in_max=3465):
     hardware = uname().sysname
     if 'esp32' in hardware:
         # Source: https://docs.micropython.org/en/latest/esp32/quickref.html#adc-analog-to-digital-conversion
@@ -17,9 +18,9 @@ def read_temp(gpio_pin_number, scale='c'):
         adc.width(ADC.WIDTH_12BIT)       # 0-4095 values
 
         # TMP36 Voltage to ADC scale
-        in_min = 205   # Min  100mV at -40C is ADC  205
-        in_max = 3453  # Max 1750mV at 125C is ADC 3583 but using 3453 to calibrate with TMP102 readings
-                       #      750mV at  25C is ADC 1536
+        # Min  100mV at -40C is ADC  205
+        # Max 1750mV at 125C is ADC 3583 but using lower value to calibrate with TMP102 readings
+        #      750mV at  25C is ADC 1536
 
         # TMP36 Temperature scale
         if scale.lower() is 'c': 
@@ -32,7 +33,15 @@ def read_temp(gpio_pin_number, scale='c'):
             print('unknown temperature scale')
             exit(1)
 
-        return round(range_map(adc.read(), in_min, in_max, out_min, out_max), 1) 
+        # Instead of a single reading let's take the average of multiple readings
+        adc_sample = []
+        for x in range(50):
+            adc_sample.append(adc.read())
+            sleep(0.01)
+        remove_high_low = sorted(adc_sample)[10:-10]
+        average_adc = sum(remove_high_low) / len(remove_high_low)
+
+        return round(range_map(average_adc, in_min, in_max, out_min, out_max), 1)
 
     elif 'esp8266' in hardware:
         # I am using the range_map() function below with measured datapoints:
