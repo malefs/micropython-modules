@@ -10,10 +10,19 @@ from time import sleep
 
 def read_adc(gpio_pin_number=37):
     # Find Temperature just using the math equations (appears to be off)
-    from machine import Pin
-    adc = ADC(Pin(gpio_pin_number)) # Pins 32-39 are valid
-    adc.atten(ADC.ATTN_6DB)         # 0-2V
-    adc.width(ADC.WIDTH_12BIT)      # 0-4095 values
+    hardware = uname().sysname
+    if 'esp32' in hardware:
+        from machine import Pin
+        adc = ADC(Pin(gpio_pin_number)) # Pins 32-39 are valid
+        adc.atten(ADC.ATTN_6DB)         # 0-2V
+        adc.width(ADC.WIDTH_12BIT)      # 0-4095 values
+
+    elif 'esp8266' in hardware:
+        adc = ADC(0)  # gpio_pin_number is ignored since there is only one ADC on ESP8266
+
+    else:
+        print('unknown hardware')
+        exit(1)
 
     # Instead of a single reading let's take the average of multiple readings
     adc_sample = []
@@ -23,7 +32,11 @@ def read_adc(gpio_pin_number=37):
     remove_high_low = sorted(adc_sample)[10:-10]
     average_adc = sum(remove_high_low) / len(remove_high_low)
 
-    millivolts = average_adc * (2000/4095)  # Example: 750mV = 1535.6 * (2000/4095)
+    if 'esp32' in hardware:
+        millivolts = average_adc * (2000/4095)  # Example: 750mV = 1535.6 * (2000/4095)
+    elif 'esp8266' in hardware:
+        millivolts = average_adc * (3300/1023)  # Example: 750mV =  232.5 * (3300/1023)
+
     temp_celsius = (millivolts - 500) / 10  # Example: 25C = (750mV - 500) / 10
     temp_fahrenheit = (temp_celsius * 9/5) + 32
 
@@ -89,6 +102,7 @@ def read_temp(gpio_pin_number, scale='c', in_min=205, in_max=3495):
 
     else:
         print('unknown hardware')
+        exit(1)
 
 
 # Re-maps a number from one range to another.
