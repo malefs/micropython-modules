@@ -26,6 +26,7 @@ import micropython
 import network
 import ntptime
 import uos
+from time import sleep
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 micropython.alloc_emergency_exception_buf(100)
@@ -36,11 +37,16 @@ ssid_pass = key_store.get('ssid_pass')
 # Connect to WiFI
 def wlan_connect(ssid, password):
     wlan = network.WLAN(network.STA_IF)
+    counter = 0
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
         print('WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
         while not wlan.isconnected():
+            counter += 1
+            if counter > 60:
+                machine.reset()
+            sleep(1)
             pass
     print('WiFi DHCP: ', wlan.ifconfig()[0])
 
