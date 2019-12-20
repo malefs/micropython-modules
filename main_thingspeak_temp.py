@@ -13,6 +13,8 @@ import tmp36
 from time import sleep
 from sys import exit
 from machine import reset
+from machine import lightsleep
+
 
 # Get ThingSpeak API Key
 import btree
@@ -21,10 +23,12 @@ db = btree.open(f)
 thingspeak_api_key = db[b'thingspeak_api_key'].decode('utf-8')
 db.close()
 
+
 server = 'api.thingspeak.com'
 
-sleep_interval = 60
+sleep_interval = 60   # Seconds
 periodic_reset = 360  # with 60 second sleep, reset every 6 hours (just in case)
+
 
 def main():
     print('=============================================')
@@ -44,7 +48,7 @@ def main():
     get_request = str.encode(get_request)  # Convert Type str to bytes
 
     # Send the Data to ThingSpeak
-    print('Server Connection:', server)
+    print('Sending Data To:', server)
     response_text = http_client.send_data(server, get_request)
     #print(response_text)
 
@@ -64,6 +68,8 @@ while True:
     try:
         main()
         counter += 1
+        sleep(0.5)  # Give a half-second to display output before device sleeps
+        #lightsleep(sleep_interval * 1000)  # Milliseconds / No access to REPL while sleeping
         sleep(sleep_interval)
 
         if counter > periodic_reset:  # Reset on a schedule just in case
