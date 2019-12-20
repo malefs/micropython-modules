@@ -15,24 +15,36 @@
 #     mpfs [/]> put boot_with_wifi.py boot.py
 #     mpfs [/]> put key_store.py
 #     mpfs [/]> repl
-#     >>> <Ctrl+] to exit repl>
+#     >>>  <Ctrl+] to exit repl>
 #
 # --OR--
 #
-#     ampy --port /dev/ttyUSB0 put boot_with_wifi.py boot.py
-#     screen /dev/ttyUSB0 115200
-#         (Ctrl+a Shift+k to kill screen connection)
+#     $ ampy --port /dev/ttyUSB0 put boot_with_wifi.py boot.py
+#     $ screen /dev/ttyUSB0 115200
+#     >>>  <Ctrl+a then Shift+k to exit repl>
 #
 
 from machine import reset
 import utime
+print()
 print('boot.py: Press CTRL+C to drop to REPL...')
+print()
 utime.sleep(3)
+
+
+# Garbage Collection in the default esp8266 boot.py
+from uos import uname
+if 'esp8266' in uname().sysname:
+    from gc import collect
+    collect()
+
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
 
+
+# Load secrets from local key_store.db
 try:
     import key_store
     ssid_name = key_store.get('ssid_name')
@@ -40,6 +52,7 @@ try:
 except:
     key_store.init()
     reset()
+
 
 # Connect to WiFI
 def wlan_connect(ssid, password):
@@ -59,6 +72,7 @@ def wlan_connect(ssid, password):
     print('WiFi DHCP: ', wlan.ifconfig()[0])
     print()
 
+
 # Set RTC using NTP
 def ntp():
     import ntptime
@@ -76,16 +90,19 @@ def no_debug():
     from esp import osdebug
     osdebug(None)
 
+
 def mem_stats():
     from esp import flash_size
     from uos import statvfs
     fs_stat = statvfs('/')
     fs_size = fs_stat[0] * fs_stat[2]
     fs_free = fs_stat[0] * fs_stat[3]
-    print('   Flash Size: {:5,}KB'.format(flash_size()/1024))
-    print('  File System: {:5,}KB'.format(fs_size/1024))
-    print('   Free Space: {:5,}KB'.format(fs_free/1024 - 2000))
+    print('Storage Information:')
+    print('   Flash Size   {:5,}KB'.format(flash_size()/1024))
+    print('   File System  {:5,}KB'.format(fs_size/1024))
+    print('   Free Space   {:5,}KB'.format(fs_free/1024))
     print()
+
 
 def list_files():
     print("List of files on this device:")
@@ -93,9 +110,10 @@ def list_files():
     print()
 
 
+# Run selected functions at boot
 no_debug()
 wlan_connect(ssid_name, ssid_pass)
-ntp()
+#ntp()
 mem_stats()
 list_files()
 
