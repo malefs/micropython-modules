@@ -11,9 +11,9 @@
 # This script just returns the unique identifier from the hardware.
 # 
 
-import ubinascii
-import machine
+from ubinascii import hexlify
+from machine import unique_id
 
 def id():
-    client_id = ubinascii.hexlify(machine.unique_id()).decode('utf-8')
+    client_id = hexlify(unique_id()).decode('utf-8')
     return client_id
