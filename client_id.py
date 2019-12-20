@@ -5,15 +5,12 @@
 # 2019-03-28
 #
 # Usage:
-#    import client
-#    unique_id = str(client.id())
+#    from client_id import client_id
+#    client.id 
 #
 # This script just returns the unique identifier from the hardware.
 # 
 
 from ubinascii import hexlify
 from machine import unique_id
-
-def id():
-    client_id = hexlify(unique_id()).decode('utf-8')
-    return client_id
+client_id = hexlify(unique_id()).decode('utf-8')  # String with Unique Client ID
