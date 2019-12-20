@@ -8,7 +8,7 @@
 # 2019-02-11
 #
 # Usage:
-#    import tmp102
+#    import SparkFun_TMP102 as tmp102
 #    tmp102.read_temp()
 #    tmp102.read_temp('F')
 #    tmp102.reset()
