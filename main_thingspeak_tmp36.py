@@ -9,11 +9,10 @@
 
 import key_store
 import http_client
-import tmp36
+import AnalogDevices_TMP36 as tmp36
 from time import sleep
 from sys import exit
 from machine import reset
-from machine import lightsleep
 
 
 # Get ThingSpeak API Key
@@ -69,7 +68,6 @@ while True:
         main()
         counter += 1
         sleep(0.5)  # Give a half-second to display output before device sleeps
-        #lightsleep(sleep_interval * 1000)  # Milliseconds / No access to REPL while sleeping
         sleep(sleep_interval)
 
         if counter > periodic_reset:  # Reset on a schedule just in case
