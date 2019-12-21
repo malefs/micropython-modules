@@ -1,12 +1,12 @@
 # Source: https://docs.micropython.org/en/latest/esp8266/tutorial/network_tcp.html#simple-http-server
 
-import machine
-pins = [machine.Pin(i, machine.Pin.IN) for i in (0, 2, 4, 5, 12, 13, 14, 15)]
+from machine import Pin
+pins = [Pin(i, Pin.IN) for i in (0, 2, 4, 5, 12, 13, 14, 15)]
 
 html = """<!DOCTYPE html>
 <html>
-    <head> <title>ESP32 Pins</title> </head>
-    <body> <h1>ESP32 Pins</h1>
+    <head> <title>Pin Values</title> </head>
+    <body> <h1>Pin Values</h1>
         <table border="1"> <tr><th>Pin</th><th>Value</th></tr> %s </table>
     </body>
 </html>
