@@ -17,12 +17,12 @@ import utime
 print('main.py: Press CTRL+C to drop to REPL...')
 utime.sleep(3)
 
-from machine import reset, lightsleep, deepsleep
+from machine import reset, deepsleep
 import mqtt
 import SparkFun_TMP102 as tmp102
 
 sleep_interval = 20    # Seconds
-sleep_type = 'light'   # normal, light, deep
+sleep_type = 'normal'   # normal or deep
 
 # Get Unique Client ID
 from ubinascii import hexlify
@@ -64,12 +64,10 @@ def log_local(timestamp, temperature):
 def go_to_sleep(sleep_interval, sleep_type):
     if sleep_type.lower() is 'normal':
         utime.sleep(sleep_interval)  # Seconds
-    elif sleep_type.lower() is 'light':
-        lightsleep(sleep_interval * 1000)  # Milliseconds / No REPL during sleep
     elif sleep_type.lower() is 'deep':
         deepsleep(sleep_interval * 1000)   # Milliseconds / No REPL during sleep
     else:
-        print('%s is not valid. Choose normal, light, or deep.')
+        print('%s is not valid. Choose normal or deep.')
 
 
 try:
