@@ -2,13 +2,16 @@
 # Brandon Gant
 # 2019-12-18
 #
+# Usage:
+#    import http_client
+#    server = '192.168.1.1'
+#    get_request = 'GET / HTTP/1.0\r\n\r\n'
+#    get_request = str.encode(get_request)  # Convert Type str to bytes
+#    response_secure = http_client.send_data(server, get_request, 443)
+#    response_clear  = http_client.send_data(server, get_request,  80, tls=False)
+#
 # Source: https://github.com/micropython/micropython/blob/master/examples/network/http_client_ssl.py
 #
-# Create the HTTP/HTTPS GET Request string
-#   get_request = 'GET / HTTP/1.0 \r\n\r\n'
-#     -OR-
-#   get_request = 'GET /update?api_key=' + thingspeak_api_key + '&field1=' + str(temp) + ' HTTP/1.0\r\n\r\n'
-#   get_request = str.encode(get_request)  # Convert Type str to bytes
 
 def send_data(server, get_request, port=443, use_tls=True, use_stream=True):  # Uses HTTPS to Port 443 by Default
     import usocket as socket
