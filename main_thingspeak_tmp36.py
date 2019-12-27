@@ -8,12 +8,22 @@
 #
 
 import key_store
-import http_client
 import AnalogDevices_TMP36 as tmp36
 from time import sleep
 from sys import exit
 from machine import reset
 
+# Check hardware
+from uos import uname
+hardware = uname().sysname
+if 'esp32' in hardware:
+    import urequests
+elif 'esp8266' in hardware:
+    # No urequests in ESP8266 Micropython
+    import http_client
+else:
+    print('Not test with', hardware)
+    exit(1)
 
 # Get ThingSpeak API Key
 import btree
@@ -48,11 +58,21 @@ def main():
 
     # Send the Data to ThingSpeak
     print('Sending Data To:', server)
-    response_text = http_client.send_data(server, get_request)
-    #print(response_text)
+    if 'esp32' in hardware:
+        URL = 'http://' + server + '/update?api_key=' + thingspeak_api_key + '&field1=' + str(tempf)
+        r = urequests.get(URL)
+        response_text = r.text
+        status = str(r.status_code)
+    elif 'esp8266' in hardware:
+        # Create the HTTPS GET Request string
+        get_request = 'GET /update?api_key=' + thingspeak_api_key + '&field1=' + str(tempf) + ' HTTP/1.0\r\n\r\n'
+        get_request = str.encode(get_request)  # Convert Type str to bytes
+        response_text = http_client.send_data(server, get_request)
+        #print(response_text)
+        status = [ line for line in response_text.split('\r\n') if "Status" in line ]
+        status = status[0]
 
-    status = [ line for line in response_text.split('\r\n') if "Status" in line ]
-    if '200 OK' in status[0]:
+    if '200' in status:
         print('Status: Success')
         print()
     else:
