@@ -35,7 +35,8 @@ db.close()
 
 #server = 'api.thingspeak.com'
 server = '192.168.7.100'
-port = '44301'
+#port = '44301' # HTTPS
+port = '8088'   # HTTP
 
 sleep_interval = 60   # Seconds
 periodic_reset = 360  # with 60 second sleep, reset every 6 hours (just in case)
@@ -61,7 +62,11 @@ def main():
     # Send the Data to ThingSpeak
     print('Sending Data To:', server)
     if 'esp32' in hardware:
-        URL = 'https://' + server + ':' + port + '/update?api_key=' + thingspeak_api_key + '&field1=' + str(tempf)
+        if '443' in port:
+            transport = 'https://'
+        else:
+            transport = 'http://'
+        URL = transport + server + ':' + port + '/update?api_key=' + thingspeak_api_key + '&field1=' + str(tempf)
         r = urequests.get(URL)
         response_text = r.text
         status = str(r.status_code)
