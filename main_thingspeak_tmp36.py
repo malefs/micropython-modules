@@ -32,11 +32,10 @@ db = btree.open(f)
 thingspeak_api_key = db[b'thingspeak_api_key'].decode('utf-8')
 db.close()
 
-
 #server = 'api.thingspeak.com'
 server = '192.168.7.100'
 #port = '44301' # HTTPS
-port = '8088'   # HTTP
+port = '8001'   # HTTP
 
 sleep_interval = 60   # Seconds
 periodic_reset = 360  # with 60 second sleep, reset every 6 hours (just in case)
