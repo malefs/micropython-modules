@@ -59,7 +59,7 @@ def main():
     get_request = str.encode(get_request)  # Convert Type str to bytes
 
     # Send the Data to ThingSpeak
-    print('Sending Data To:', server)
+    print('Sending Data To: %s:%s' % (server, port))
     if 'esp32' in hardware:
         if '443' in port:
             transport = 'https://'
