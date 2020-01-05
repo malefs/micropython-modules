@@ -49,9 +49,9 @@ def main():
     from uos import uname
     hardware = uname().sysname
     if 'esp32' in hardware:
-        tempf = tmp36.read_temp(37,'F')
+        tempf = round(tmp36.read_temp(37,'F'), 1)
     elif 'esp8266' in hardware:
-        tempf = tmp36.read_temp(0,'F')
+        tempf = round(tmp36.read_temp(0,'F'), 1)
     print('Temperature Reading: %sF' % tempf)
 
     # Send the Data to Server
