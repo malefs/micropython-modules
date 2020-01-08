@@ -78,7 +78,11 @@ def ntp():
     import ntptime
     ntptime.host = key_store.get('ntp_host')
     print("NTP Server:", ntptime.host)
+    counter = 0
     while utime.time() < 10000:  # Retry until clock is set
+        counter += 1
+        if counter > 60:
+            reset()
         ntptime.settime()
         utime.sleep(1)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
