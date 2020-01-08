@@ -117,7 +117,7 @@ def list_files():
 # Run selected functions at boot
 no_debug()
 wlan_connect(ssid_name, ssid_pass)
-ntp()
+#ntp()
 mem_stats()
 list_files()
 
