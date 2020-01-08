@@ -11,26 +11,15 @@ from machine import reset
 from time import sleep
 
 import key_store
+from iot_api import iot_api
+from client_id import client_id
 import AnalogDevices_TMP36 as tmp36
 from sys import exit
+from uos import uname
 
 # Get Unique Machine ID
-from ubinascii import hexlify
-from machine import unique_id
-client_id = hexlify(unique_id()).decode('utf-8')  # String with Unique Client ID
+from client_id import client_id
 print('Client ID:', client_id)
-
-# Check hardware
-from uos import uname
-hardware = uname().sysname
-if 'esp32' in hardware:
-    import urequests
-elif 'esp8266' in hardware:
-    # No urequests in ESP8266 Micropython
-    import http_client
-else:
-    print('Not tested with', hardware)
-    exit(1)
 
 # Get iot-api server:port from key_store.db
 import btree
@@ -53,35 +42,16 @@ def main():
     print()
 
     # Read the Temperature
-    from uos import uname
     hardware = uname().sysname
     if 'esp32' in hardware:
-        tempf = round(tmp36.read_temp(37,'F'), 1)
+        field1 = round(tmp36.read_temp(37,'F'), 1)
     elif 'esp8266' in hardware:
-        tempf = round(tmp36.read_temp(0,'F'), 1)
-    print('Temperature Reading: %sF' % tempf)
+        field1 = round(tmp36.read_temp(0,'F'), 1)
+    print('Temperature Reading: %sF' % field1)
 
     # Send the Data to Server
-    print('Sending Data To: %s:%s' % (server, port))
-    if 'esp32' in hardware:
-        if '443' in port:
-            transport = 'https://'
-        else:
-            transport = 'http://'
-        URL = transport + server + ':' + port + '/update?api_key=' + client_id + '&field1=' + str(tempf)
-        r = urequests.get(URL)
-        response_text = r.text
-        status = str(r.status_code)
-    elif 'esp8266' in hardware:
-        # Create the GET Request string
-        get_request = 'GET /update?api_key=' + client_id + '&field1=' + str(tempf) + ' HTTP/1.0\r\n\r\n'
-        get_request = str.encode(get_request)  # Convert Type str to bytes
-        response_text = http_client.send_data(server, get_request)
-        #print(response_text)
-        status = [ line for line in response_text.split('\r\n') if "Status" in line ]
-        status = status[0]
-
-    if '200' in status:
+    response = iot_api(server, port, client_id, field1)
+    if response:
         print('Status: Success')
         print()
     else:
