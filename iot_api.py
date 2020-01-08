@@ -4,7 +4,7 @@ from uos import uname
 def iot_api(server, port, api_key, field1, field2=None):
     hardware = uname().sysname
 
-    print('server=%s, port=%s, api_key=%s, field1=%s, field2=%s' % (server, port, api_key, field1, field2))
+    print('Server: %s  Port: %s  API_Key: %s  Field1: %s  Field2: %s' % (server, port, api_key, field1, field2))
 
     # Send the field data to the iot-api server
     if 'esp32' in hardware:
