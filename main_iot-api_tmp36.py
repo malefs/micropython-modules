@@ -33,8 +33,8 @@ if server == 'api.thingspeak.com':
     client_id = db[b'thingspeak_api_key'].decode('utf-8')
 
 # ThingSpeak free tier limited to 15 seconds between data updates
-sleep_interval = 15   # Seconds
-periodic_reset = 1440 # reset every 6 hours (21600 seconds) just in case / 15x1440 / 60x360
+sleep_interval = 30   # Seconds
+periodic_reset = 720  # reset every 6 hours (21600 seconds) just in case / 15x1440 / 30x720 / 60x360
 
 
 def main():
