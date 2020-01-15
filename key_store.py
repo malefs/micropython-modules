@@ -62,7 +62,10 @@ def set(key,value):
 def get(key):
     f = open(file, 'r+b')
     db = btree.open(f)
-    return db[key].decode('utf-8')
+    try:
+        return db[key].decode('utf-8')
+    except KeyError:
+        return None
     db.close()
 
 
