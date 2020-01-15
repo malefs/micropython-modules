@@ -22,15 +22,13 @@ from client_id import client_id
 print('Client ID:', client_id)
 
 # Get iot-api server:port from key_store.db
-import btree
-f = open('key_store.db', 'r+b')
-db = btree.open(f)
-server, port = db[b'iot-api'].decode('utf-8').split(':')
+server,port = key_store.get('iot-api').split(':')
 
 if server == 'api.thingspeak.com':
-    f = open('key_store.db', 'r+b')
-    db = btree.open(f)
-    client_id = db[b'thingspeak_api_key'].decode('utf-8')
+    client_id = key_store.get('thingspeak_api_key')
+    if not client_id:
+        client_id = input('Enter ThingSpeak write_api_key: ')
+        key_store.set('thingspeak_api_key', 'client_id')
 
 # ThingSpeak free tier limited to 15 seconds between data updates
 sleep_interval = 30   # Seconds

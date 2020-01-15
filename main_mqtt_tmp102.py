@@ -30,10 +30,8 @@ from machine import unique_id
 client_id = hexlify(unique_id()).decode('utf-8')  # String with Unique Client ID
 
 # Get MQTT Broker IP from key_store.db
-import btree
-f = open('key_store.db', 'r+b')
-db = btree.open(f)
-broker = db[b'mqtt_broker'].decode('utf-8')
+import key_store
+broker = key_store.get('mqtt_broker')
 topic = 'devices/' + client_id
 
 
@@ -55,11 +53,7 @@ def main():
 
 # Log Timestamp and Data locally
 def log_local(timestamp, temperature):
-    f = open('key_store.db', 'r+b')
-    db = btree.open(f)
-    db[str(timestamp)] = str(temperature)
-    db.flush()
-    db.close()
+    key_store.set(str(timestamp)) = str(temperature)
 
 def go_to_sleep(sleep_interval, sleep_type):
     if sleep_type.lower() is 'normal':
