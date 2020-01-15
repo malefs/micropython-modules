@@ -65,10 +65,9 @@ def wlan_connect(ssid, password):
         wlan.connect(ssid, password)
         while not wlan.isconnected():
             counter += 1
-            if counter > 60:
+            if counter > 20:
                 reset()
-            utime.sleep(1)
-            pass
+            utime.sleep(3)
     print('WiFi DHCP: ', wlan.ifconfig()[0])
     print()
 
@@ -81,10 +80,10 @@ def ntp():
     counter = 0
     while utime.time() < 10000:  # Retry until clock is set
         counter += 1
-        if counter > 60:
+        if counter > 20:
             reset()
         ntptime.settime()
-        utime.sleep(1)
+        utime.sleep(3)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print()
          
