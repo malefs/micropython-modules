@@ -47,7 +47,7 @@ sleep_interval = 30   # Seconds
 
 
 def main():
-    print('=============================================')
+    print('=' * 45)
     print()
 
     # Read the Temperature
@@ -61,10 +61,10 @@ def main():
     # Send the Data to Server
     response = iot_api(server, port, client_id, field1)
     if response:
-        print('Status: Success')
+        print('Upload: Success')
         print()
     else:
-        print('Status: Failed')
+        print('Upload: Failed')
         sleep(sleep_interval)
         reset()
 
