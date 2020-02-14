@@ -1,11 +1,23 @@
 #
 # Brandon Gant
-# 2019-12-17
+# Created: 2019-12-17
+# Updated: 2020-02-14
 #
 # Espressif ESP8266-DevKitc_V1 board with ESP-WROOM-02D chip
 # Espressif ESP32-PICO-KIT_V4.1 board with ESP32-PICO-D4 chip 
 # TMP36 temperature sensor with Vout connected to ADC pin
 #
+# Files required to run this script:
+#    boot.py (boot_with_wifi.py)
+#    key_store.py
+#    client_id.py
+#    soft_wdt.py
+#    main.py (main_iot-api_tmp36.py)
+#    AnalogDevices_TMP36.py
+#    iot-api.py
+#
+
+from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
 
 from machine import reset
 from time import sleep
@@ -32,7 +44,6 @@ if server == 'api.thingspeak.com':
 
 # ThingSpeak free tier limited to 15 seconds between data updates
 sleep_interval = 30   # Seconds
-periodic_reset = 720  # reset every 6 hours (21600 seconds) just in case / 15x1440 / 30x720 / 60x360
 
 
 def main():
@@ -58,16 +69,14 @@ def main():
         reset()
 
 
-counter = 0
 while True:
     try:
         main()
-        counter += 1
-        sleep(0.5)  # Give a half-second to display output before device sleeps
+        wdt_feed(sleep_interval * 2)  # Keep Watchdog Timer from resetting device for 2x sleep_interval
         sleep(sleep_interval)
-
-        if counter > periodic_reset:  # Reset on a schedule just in case
-            reset() 
+    except KeyboardInterrupt:
+        wdt_feed(WDT_CANCEL)  # Cancel/Disable Watchdog Timer when Ctrl+C pressed
+        exit()
     except:
         sleep(sleep_interval)
         reset()

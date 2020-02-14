@@ -2,11 +2,16 @@
 #
 # Brandon Gant
 # Created: 2019-02-08
-# Updated: 2019-12-20
+# Updated: 2020-02-14
 #
 # Source: https://github.com/micropython/micropython/tree/master/ports/esp32#configuring-the-wifi-and-using-the-board
 # Source: https://boneskull.com/micropython-on-esp32-part-1/
 # Source: https://docs.micropython.org/en/latest/library/network.WLAN.html
+#
+# Files required to run this script:
+#     boot.py (boot_with_wifi.py)
+#     key_store.py
+#     soft_wdt.py
 #
 # Usage:
 #     $ pip3 install --user mpfshell
@@ -24,6 +29,8 @@
 #     >>>  <Ctrl+a then Shift+k to exit repl>
 #
 
+from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
+
 from machine import reset
 import utime
 print()
@@ -31,18 +38,15 @@ print('boot.py: Press CTRL+C to drop to REPL...')
 print()
 utime.sleep(3)
 
-
 # Garbage Collection in the default esp8266 boot.py
 from uos import uname
 if 'esp8266' in uname().sysname:
     from gc import collect
     collect()
 
-
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
-
 
 # Load secrets from local key_store.db
 try:
@@ -53,6 +57,7 @@ except:
     key_store.init()
     reset()
 
+wdt_feed(120)  # boot.py process has 2 minutes to complete before Watchdog resets device
 
 # Connect to WiFI
 def wlan_connect(ssid, password):
@@ -71,7 +76,6 @@ def wlan_connect(ssid, password):
     print('WiFi DHCP: ', wlan.ifconfig()[0])
     print()
 
-
 # Set RTC using NTP
 def ntp():
     import ntptime
@@ -87,12 +91,10 @@ def ntp():
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print()
          
-
 # Suppress ESP debug messages in the REPL
 def no_debug():
     from esp import osdebug
     osdebug(None)
-
 
 def mem_stats():
     from esp import flash_size
@@ -106,12 +108,10 @@ def mem_stats():
     print('   Free Space   {:5,}KB'.format(fs_free/1024))
     print()
 
-
 def list_files():
     print("List of files on this device:")
     print('   %s' % '\n   '.join(map(str, sorted(uos.listdir('/')))))
     print()
-
 
 # Run selected functions at boot
 no_debug()
