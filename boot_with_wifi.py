@@ -30,10 +30,13 @@
 #
 
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
+wdt_feed(120)  # boot.py script has 2 minutes to complete before Watchdog timer resets device
 
 from machine import reset
 import utime
 print()
+
+print('=' * 45)
 print('boot.py: Press CTRL+C to drop to REPL...')
 print()
 utime.sleep(3)
@@ -57,22 +60,16 @@ except:
     key_store.init()
     reset()
 
-wdt_feed(120)  # boot.py process has 2 minutes to complete before Watchdog resets device
-
 # Connect to WiFI
 def wlan_connect(ssid, password):
     import network
     wlan = network.WLAN(network.STA_IF)
-    counter = 0
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
         print('WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
         while not wlan.isconnected():
-            counter += 1
-            if counter > 20:
-                reset()
-            utime.sleep(3)
+            utime.sleep(1)
     print('WiFi DHCP: ', wlan.ifconfig()[0])
     print()
 
@@ -81,13 +78,9 @@ def ntp():
     import ntptime
     ntptime.host = key_store.get('ntp_host')
     print("NTP Server:", ntptime.host)
-    counter = 0
     while utime.time() < 10000:  # Retry until clock is set
-        counter += 1
-        if counter > 20:
-            reset()
         ntptime.settime()
-        utime.sleep(3)
+        utime.sleep(2)
     print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print()
          
@@ -120,3 +113,6 @@ wlan_connect(ssid_name, ssid_pass)
 mem_stats()
 list_files()
 
+print('boot.py: end of script')
+print('=' * 45)
+print()
