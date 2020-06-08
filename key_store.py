@@ -44,6 +44,7 @@ def init():
     db[b'ntp_host']    = input('Enter NTP server - ')
     db[b'mqtt_broker'] = input('Enter MQTT server - ')
     db[b'iot-api']     = input('Enter IoT server:port - ')
+    db[b'influxdb']    = input('Enter InfluxDB server:port:database:location - ')
     db.flush()
     #print("%s, %s, and %s added to %s file" % (db[b'ssid_name'].decode('utf-8'), db[b'ssid_pass'].decode('utf-8'), db[b'mqtt_broker'].decode('utf-8'), file))
     db.close()
