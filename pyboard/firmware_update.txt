@@ -1,0 +1,26 @@
+Check the current firmware version:
+
+  screen /dev/ttyACM0
+  import os
+  os.uname()
+
+Download newer PYBv1.1 firmware:
+https://micropython.org/download
+
+Read Update Instructions:
+https://github.com/micropython/micropython/wiki/Pyboard-Firmware-Update
+
+Unplug everything from PyBoard including USB
+Jumper 3V3 and DFU pins
+Plug in USB
+
+  sudo apt-get install dfu-util
+  sudo dfu-util -l
+  sudo dfu-util --alt 0 -D <firmware>.dfu
+
+Unplug USB
+Unplug 3v3 and DFU pin jumper
+Plug in USB
+
+Check the current firmware version
+
