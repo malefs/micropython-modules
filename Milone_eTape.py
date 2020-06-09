@@ -11,11 +11,11 @@
 # Pinout:
 #    Red   --> 3.3V
 #    Black --> GND
-#    White --> GPIO36  (any ADC pin 32-39 will work)
+#    White --> GPIO37  (any ADC pin 32-39 will work)
 #
 
 from machine import Pin, ADC
-adc = ADC(Pin(36))
+adc = ADC(Pin(37))
 adc.atten(ADC.ATTN_11DB)   # 0V to 3.3V range
 adc.width(ADC.WIDTH_10BIT) # 0  to 1023 bits read
 
@@ -71,5 +71,5 @@ def conversion(raw_adc):
 def read():
     current_raw_adc = adc.read()
     current_inches  = conversion(current_raw_adc)
-    return current_raw_adc
+    return (current_raw_adc, current_inches)
 
