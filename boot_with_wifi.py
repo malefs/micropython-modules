@@ -116,3 +116,6 @@ list_files()
 print('boot.py: end of script')
 print('=' * 45)
 print()
+
+# Disable boot.py watchdog timer
+wdt_feed(WDT_CANCEL)
