@@ -11,7 +11,7 @@
 # Pinout:
 #    Red   --> 3.3V
 #    Black --> GND
-#    White --> GPIO37  (any ADC pin 32-39 will work)
+#    White --> GPIO37  (any ADC pin 32-39 should work)
 #
 
 from time import sleep 
@@ -85,3 +85,15 @@ def average():
     remove_high_low = sorted(adc_sample)[2:-2]
     average_adc = sum(remove_high_low) / len(remove_high_low)
     return round(average_adc)
+
+
+def inches(adc, in_min=450, in_max=741):
+    # eTape ADC to Inches scale
+    # Min ADC 450 is  1.0 inches or less
+    # Max ADC 741 is 16.0 inches (values jump non-linearly at 16.5 inches)
+    out_min = 1.0
+    out_max = 16.0
+
+    inches = range_map(adc, in_min, in_max, out_min, out_max)
+    return round(inches, 1)
+
