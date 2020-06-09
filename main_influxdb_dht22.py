@@ -29,8 +29,8 @@ from client_id import client_id
 print('Client ID:', client_id)
 
 # Get InfluxDB server:port:database:location from key_store.db
-database = client_id
-server,port,location = key_store.get('influxdb').split(':')
+# i.e. influxdb.localdomain:8086:garage:DHT22
+server,port,database,name = key_store.get('influxdb').split(':')
 url = 'http://%s:%s/write?db=%s' % (server,port,database)
 print(url)
 
@@ -49,7 +49,7 @@ def main():
     print('Temperature: %.01fC  RH: %.01f%%' % (temp_F, sensor.humidity()))
 
     # Send the Data to Server
-    data = "DHT22,device=%s,location=%s temp_F=%.01f,humidity=%.01f" % (client_id, location, temp_F, sensor.humidity())
+    data = "name,device=%s temp_F=%.01f,humidity=%.01f" % (client_id, temp_F, sensor.humidity())
     response = urequests.post(url,data=data)
     #print('STATUS:', response.status_code)
     if '204' in str(response.status_code):  # HTTP Status 204 (No Content) indicates server successfull fulfilled request with no response content
