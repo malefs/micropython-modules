@@ -20,6 +20,7 @@ wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchd
 from machine import reset, Pin
 from time import sleep
 import urequests
+import gc 
 
 import key_store
 from client_id import client_id
@@ -35,7 +36,7 @@ print('Client ID:', client_id)
 # i.e. influxdb.localdomain:8086:Garage:DHT22
 server,port,database,name = key_store.get('influxdb').split(':')
 
-sleep_interval = 10  # Seconds
+sleep_interval = 3  # Seconds
 
 # Create database if it does not already exist
 url = 'http://%s:%s/query' % (server,port)
@@ -58,6 +59,9 @@ print()
 
 def main():
 
+    gc.collect()  # Loop runs device out of memory without this
+    #print('Free Memory:', gc.mem_free())
+
     # Read the eTape
     water = Milone_eTape.inches()
     #print('Inches of Water: %.01f' % water)
@@ -79,7 +83,7 @@ def main():
 while True:
     try:
         main()
-        wdt_feed(sleep_interval * 2)  # Keep Watchdog Timer from resetting device for 2x sleep_interval
+        wdt_feed(sleep_interval * 10)  # Keep Watchdog Timer from resetting device for 2x sleep_interval
         sleep(sleep_interval)
     except KeyboardInterrupt:
         wdt_feed(WDT_CANCEL)  # Cancel/Disable Watchdog Timer when Ctrl+C pressed
