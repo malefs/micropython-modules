@@ -14,6 +14,7 @@
 #    White --> GPIO37  (any ADC pin 32-39 will work)
 #
 
+from time import sleep 
 from machine import Pin, ADC
 adc = ADC(Pin(37))
 adc.atten(ADC.ATTN_11DB)   # 0V to 3.3V range
@@ -78,9 +79,9 @@ def read():
 # Instead of a single reading let's take the average of multiple readings
 def average():
     adc_sample = []
-    for x in range(14):
+    for x in range(22):
         adc_sample.append(adc.read())
         sleep(0.01)
     remove_high_low = sorted(adc_sample)[2:-2]
     average_adc = sum(remove_high_low) / len(remove_high_low)
-    return average_adc
+    return round(average_adc)
