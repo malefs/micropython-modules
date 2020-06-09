@@ -29,7 +29,8 @@ from client_id import client_id
 print('Client ID:', client_id)
 
 # Get InfluxDB server:port:database:location from key_store.db
-server,port,database,location = key_store.get('influxdb').split(':')
+database = client_id
+server,port,location = key_store.get('influxdb').split(':')
 url = 'http://%s:%s/write?db=%s' % (server,port,database)
 print(url)
 
