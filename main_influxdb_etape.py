@@ -15,6 +15,7 @@
 #
 
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
+wdt_feed(120)  # main.py script has 1 minute to initialize and loop before Watchdog timer resets device
 
 from machine import reset, Pin
 from time import sleep
@@ -33,21 +34,36 @@ print('Client ID:', client_id)
 # Get InfluxDB server:port:database:name from key_store.db
 # i.e. influxdb.localdomain:8086:Garage:DHT22
 server,port,database,name = key_store.get('influxdb').split(':')
-url = 'http://%s:%s/write?db=%s' % (server,port,database)
-print(url)
 
-sleep_interval = 10   # Seconds
+sleep_interval = 10  # Seconds
+
+# Create database if it does not already exist
+url = 'http://%s:%s/query' % (server,port)
+headers = {'Content-type': 'application/x-www-form-urlencoded'}
+data = 'q=SHOW DATABASES'
+response = urequests.post(url,headers=headers,data=data)
+if not database in response.text:
+    print('Creating Database: %s' % (database))
+    data = 'q=CREATE DATABASE "%s"' % (database)  # DROP DATABASE to remove
+    response = urequests.post(url,headers=headers,data=data)
+
+# Set URL for Database Writes
+url = 'http://%s:%s/write?db=%s' % (server,port,database)
+
+print('=' * 45)
+print()
+
 
 def main():
-    print('=' * 45)
-    print()
 
     # Read the eTape
     water = Milone_eTape.inches()
-    print('Inches of Water: %.01f' % (water)
+    #print('Inches of Water: %.01f' % water)
 
     # Send the Data to Server
-    data = "name,device=%s inches=%.01f" % (client_id, inches)
+    data = "%s,device=%s inches=%.01f" % (name, client_id, water)
+    print(data)
+    sleep(5)
     response = urequests.post(url,data=data)
     #print('STATUS:', response.status_code)
     if '204' in str(response.status_code):  # HTTP Status 204 (No Content) indicates server successfull fulfilled request with no response content
