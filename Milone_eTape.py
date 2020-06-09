@@ -68,8 +68,19 @@ def conversion(raw_adc):
     return inches
 
 
+# Single reading from eTape
 def read():
     current_raw_adc = adc.read()
     current_inches  = conversion(current_raw_adc)
-    return (current_raw_adc, current_inches)
+    return current_raw_adc
 
+
+# Instead of a single reading let's take the average of multiple readings
+def average():
+    adc_sample = []
+    for x in range(14):
+        adc_sample.append(adc.read())
+        sleep(0.01)
+    remove_high_low = sorted(adc_sample)[2:-2]
+    average_adc = sum(remove_high_low) / len(remove_high_low)
+    return average_adc
