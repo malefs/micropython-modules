@@ -11,12 +11,12 @@
 # Pinout:
 #    Red   --> 3.3V
 #    Black --> GND
-#    White --> GPIO37  (any ADC pin 32-39 should work)
+#    White --> GPIO32  (any ADC pin 32-39 should work)
 #
 
 from time import sleep 
 from machine import Pin, ADC
-adc = ADC(Pin(37))
+adc = ADC(Pin(32))
 adc.atten(ADC.ATTN_11DB)   # 0V to 3.3V range
 adc.width(ADC.WIDTH_10BIT) # 0  to 1023 bits read
 
@@ -44,20 +44,20 @@ def range_map(x, in_min, in_max, out_min, out_max):
     return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min
 
 
-def inches(in_min=450, in_max=741):
+def inches(in_min=480, in_max=620):
     # Based on manual measurements of etape ADC values at half-inch increments
-    # Min ADC 450 is  1.0 inches or less
-    # Max ADC 741 is 16.0 inches (values jump non-linearly at 16.5 inches)
+    # Min ADC 480 is  1.5 inches or less (1.0 and less is 472)
+    # Max ADC 620 is 10.0 inches
     #
     # Sump switches  ON at about 585
-    # Sump switches OFF at about 498 and fills with water
+    # Sump switches OFF at about 500 and fills with water
 
-    out_min = 1.0
-    out_max = 16.0
+    out_min = 1.5
+    out_max = 10.0
     inches = range_map(average(), in_min, in_max, out_min, out_max)
 
     # bottom of etape is about one inch above the base of the sump pit
-    inches += 1
+    #inches += 1
 
     return round(inches, 1)
 
