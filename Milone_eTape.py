@@ -26,13 +26,13 @@ def read():
     return adc.read()
 
 
-# Instead of a single reading let's take the average of multiple readings
+# Instead of a single reading let's take the average of multiple readings (throwing out highs and lows)
 def average():
     adc_sample = []
-    for x in range(22):
+    for x in range(40):
         adc_sample.append(adc.read())
         sleep(0.01)
-    remove_high_low = sorted(adc_sample)[2:-2]
+    remove_high_low = sorted(adc_sample)[15:-5]
     average_adc = sum(remove_high_low) / len(remove_high_low)
     return round(average_adc)
 
@@ -57,7 +57,7 @@ def inches(in_min=480, in_max=620):
     inches = range_map(average(), in_min, in_max, out_min, out_max)
 
     # bottom of etape is about a half inch above the base of the sump pit
-    inches += 0.5
+    #inches += 0.5
 
     return round(inches, 1)
 
