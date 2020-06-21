@@ -49,8 +49,8 @@ def inches(in_min=480, in_max=620):
     # Min ADC 480 is  1.5 inches or less (1.0 and less is 472)
     # Max ADC 620 is 10.0 inches
     #
-    # Sump switches  ON at about 585
-    # Sump switches OFF at about 500 and fills with water
+    # Sump switches  ON at about 7 inches
+    # Sump switches OFF at about 3 inches and fills with water
 
     out_min = 1.5
     out_max = 10.0
