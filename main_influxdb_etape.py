@@ -72,10 +72,10 @@ def main():
     response = urequests.post(url,data=data)
     #print('STATUS:', response.status_code)
     if '204' in str(response.status_code):  # HTTP Status 204 (No Content) indicates server successfull fulfilled request with no response content
-        print('Upload: Success')
+        print('InfluxDB write: Success')
         print()
     else:
-        print('Upload: Failed')
+        print('InfluxDB write: Failed')
         sleep(sleep_interval)
         reset()
 
