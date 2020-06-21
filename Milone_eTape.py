@@ -56,8 +56,8 @@ def inches(in_min=480, in_max=620):
     out_max = 10.0
     inches = range_map(average(), in_min, in_max, out_min, out_max)
 
-    # bottom of etape is about one inch above the base of the sump pit
-    #inches += 1
+    # bottom of etape is about a half inch above the base of the sump pit
+    inches += 0.5
 
     return round(inches, 1)
 
