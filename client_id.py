@@ -2,11 +2,12 @@
 # MicroPython:          http://docs.micropython.org/en/latest/library/machine.html#machine.unique_id
 #
 # Brandon Gant
-# 2019-03-28
+# Created: 2019-03-28
+# Updated: 2020-09-09
 #
 # Usage:
 #    from client_id import client_id
-#    client.id 
+#    print(client_id) 
 #
 # This script just returns the unique identifier from the hardware.
 # 

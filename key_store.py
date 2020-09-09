@@ -1,7 +1,8 @@
 # MicroPython:          https://docs.micropython.org/en/latest/
 #
 # Brandon Gant
-# 2019-03-28
+# Created: 2019-03-28
+# Updated: 2020-09-09
 #
 # Usage:
 #    import key_store
@@ -42,9 +43,9 @@ def init():
     db[b'ssid_name']   = input('Enter WiFi SSID - ')
     db[b'ssid_pass']   = input('Enter WiFi password - ')
     db[b'ntp_host']    = input('Enter NTP server - ')
-    db[b'mqtt_broker'] = input('Enter MQTT server - ')
-    db[b'iot-api']     = input('Enter IoT server:port - ')
-    db[b'influxdb']    = input('Enter InfluxDB server:port:database:name - ')
+    #db[b'mqtt_broker'] = input('Enter MQTT server - ')
+    #db[b'iot-api']     = input('Enter IoT server:port - ')
+    db[b'influxdb']    = input('Enter InfluxDB server:port:database:measurement - ')
     db.flush()
     #print("%s, %s, and %s added to %s file" % (db[b'ssid_name'].decode('utf-8'), db[b'ssid_pass'].decode('utf-8'), db[b'mqtt_broker'].decode('utf-8'), file))
     db.close()

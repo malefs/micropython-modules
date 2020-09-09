@@ -2,7 +2,7 @@
 #
 # Brandon Gant
 # Created: 2019-02-08
-# Updated: 2020-02-14
+# Updated: 2020-09-09
 #
 # Source: https://github.com/micropython/micropython/tree/master/ports/esp32#configuring-the-wifi-and-using-the-board
 # Source: https://boneskull.com/micropython-on-esp32-part-1/
@@ -57,6 +57,7 @@ try:
     ssid_name = key_store.get('ssid_name')
     ssid_pass = key_store.get('ssid_pass')
 except:
+    wdt_feed(WDT_CANCEL)
     key_store.init()
     reset()
 
