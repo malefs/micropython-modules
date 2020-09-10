@@ -52,20 +52,28 @@ server,port,database,measurement = key_store.get('influxdb').split(':')
 
 sleep_interval = 30  # Seconds
 
-# Create database if it does not already exist
-url = 'http://%s:%s/query' % (server,port)
-headers = {'Content-type': 'application/x-www-form-urlencoded'}
-data = 'q=SHOW DATABASES'
-response = urequests.post(url,headers=headers,data=data)
-if not database in response.text:
-    print('Creating Database: %s' % (database))
-    data = 'q=CREATE DATABASE "%s"' % (database)  # DROP DATABASE to remove
-    response = urequests.post(url,headers=headers,data=data)
-else:
-    print('Using Database: %s' % (database))
+# Create database if it does not already exist (only works with no authentication or admin rights)
+#url = 'http://%s:%s/query' % (server,port)
+#headers = {'Content-type': 'application/x-www-form-urlencoded'}
+#data = 'q=SHOW DATABASES'
+#response = urequests.post(url,headers=headers,data=data)
+#if not database in response.text:
+#    print('Creating Database: %s' % (database))
+#    data = 'q=CREATE DATABASE "%s"' % (database)  # DROP DATABASE to remove
+#    response = urequests.post(url,headers=headers,data=data)
+#else:
+#    print('Using Database: %s' % (database))
 
 # Set URL for Database Writes
 url = 'http://%s:%s/write?db=%s' % (server,port,database)
+
+# Set JSON Web Token (JWT) from key_store.db
+headers = {
+    'Content-type': 'application/x-www-form-urlencoded',
+    'Authorization': ''
+}
+headers['Authorization'] = 'Bearer %s' % key_store.get('jwt')
+
 
 print('=' * 45)
 print()
@@ -83,7 +91,7 @@ def main():
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
     data = "%s,clientid=%s temperature=%.01f" % (measurement, client_id, temperature)
     print(data)
-    response = urequests.post(url,data=data)
+    response = urequests.post(url,headers=headers,data=data)
     #print('STATUS:', response.status_code)
     if '204' in str(response.status_code):  # HTTP Status 204 (No Content) indicates server successfull fulfilled request with no response content
         print('InfluxDB write: Success')
