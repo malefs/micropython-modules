@@ -101,8 +101,9 @@ def mem_stats():
     print()
 
 def list_files():
+    from uos import listdir
     print("List of files on this device:")
-    print('   %s' % '\n   '.join(map(str, sorted(uos.listdir('/')))))
+    print('   %s' % '\n   '.join(map(str, sorted(listdir('/')))))
     print()
 
 # Run selected functions at boot
