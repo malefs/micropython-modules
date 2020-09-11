@@ -10,12 +10,15 @@
 #    esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-idf3-20200902-v1.13.bin
 #    mpfshell
 #    open ttyUSB0
+#
 #    put boot_with_wifi.py boot.py
-#    put main_influxdb_tmp36.py main.py
 #    put key_store.py
-#    put client_id.py
 #    put soft_wdt.py
+#
+#    put main_influxdb_tmp36.py main.py
+#    put client_id.py
 #    put AnalogDevices_TMP36.py
+#
 #    repl
 #    from machine import reset
 #    reset()
@@ -34,7 +37,11 @@ wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchd
 from machine import reset, Pin
 from time import sleep
 import urequests
+
+# Enable automatic Garbage Collection to free up Heap RAM
 import gc 
+gc.enable()
+gc.threshold(gc.mem_free() // 4 + gc.mem_alloc())
 
 import key_store
 from client_id import client_id
@@ -65,7 +72,10 @@ sleep_interval = 30  # Seconds
 #    print('Using Database: %s' % (database))
 
 # Set URL for Database Writes
-url = 'http://%s:%s/write?db=%s' % (server,port,database)
+if '443' in port:
+    url = 'https://%s/write?db=%s' % (server,database)
+else:
+    url = 'http://%s:%s/write?db=%s' % (server,port,database)
 
 # Set JSON Web Token (JWT) from key_store.db
 headers = {
@@ -81,8 +91,8 @@ print()
 
 def main():
 
-    gc.collect()  # Loop runs device out of memory without this
-    #print('Free Memory:', gc.mem_free())
+    # Uncomment to monitor RAM usage
+    print('Free Memory:', gc.mem_free())
 
     # Read the TMP36 Sensor
     temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=37,scale='F'), 1)
