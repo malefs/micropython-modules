@@ -39,7 +39,7 @@ def init():
         f = open(file, 'r+b')
     except OSError:
         f = open(file, 'w+b')
-    db = btree.open(f,pagesize=1024)
+    db = btree.open(f,pagesize=512)
     db[b'ssid_name']    = input('Enter WiFi SSID - ')
     db[b'ssid_pass']    = input('Enter WiFi password - ')
     db[b'ntp_host']     = input('Enter NTP server - ')
