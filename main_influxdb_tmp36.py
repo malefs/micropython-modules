@@ -37,11 +37,7 @@ wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchd
 from machine import reset, Pin
 from time import sleep
 import urequests
-
-# Enable automatic Garbage Collection to free up Heap RAM
 import gc 
-gc.enable()
-gc.threshold(gc.mem_free() // 4 + gc.mem_alloc())
 
 import key_store
 from client_id import client_id
@@ -91,8 +87,9 @@ print()
 
 def main():
 
+    gc.collect() # Free up Heap space after each loop to avoid urequests memory leak 
     # Uncomment to monitor RAM usage
-    print('Free Memory:', gc.mem_free())
+    #print('Free Memory: %sKB' % int(gc.mem_free()/1024))
 
     # Read the TMP36 Sensor
     temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=37,scale='F'), 1)
