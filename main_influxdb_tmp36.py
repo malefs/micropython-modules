@@ -40,7 +40,6 @@ import urequests
 import gc 
 
 import key_store
-from client_id import client_id
 from sys import exit
 
 import AnalogDevices_TMP36
