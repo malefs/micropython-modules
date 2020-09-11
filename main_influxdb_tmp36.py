@@ -93,7 +93,7 @@ def main():
 
     # Read the TMP36 Sensor
     temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=37,scale='F'), 1)
-    print('Fahrenheit: %.01f' % temperature)
+    #print('Fahrenheit: %.01f' % temperature)
 
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
     data = "%s,clientid=%s temperature=%.01f" % (measurement, client_id, temperature)
