@@ -41,12 +41,6 @@ print('boot.py: Press CTRL+C to drop to REPL...')
 print()
 utime.sleep(3)
 
-# Enable automatic Garbage Collection to free Heap RAM
-import gc
-gc.collect()
-gc.enable()
-gc.threshold(gc.mem_free() // 4 + gc.mem_alloc())
-
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
@@ -93,6 +87,7 @@ def no_debug():
 def mem_stats():
     from esp import flash_size
     from uos import statvfs
+    import gc
     fs_stat = statvfs('/')
     fs_size = fs_stat[0] * fs_stat[2]
     fs_free = fs_stat[0] * fs_stat[3]
