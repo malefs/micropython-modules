@@ -34,7 +34,7 @@
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
 wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchdog timer resets device
 
-from machine import reset, Pin
+from machine import reset
 from time import sleep
 import urequests
 import gc 
