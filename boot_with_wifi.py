@@ -41,11 +41,11 @@ print('boot.py: Press CTRL+C to drop to REPL...')
 print()
 utime.sleep(3)
 
-# Garbage Collection in the default esp8266 boot.py
-from uos import uname
-if 'esp8266' in uname().sysname:
-    from gc import collect
-    collect()
+# Enable automatic Garbage Collection to free Heap RAM
+import gc
+gc.collect()
+gc.enable()
+gc.threshold(gc.mem_free() // 4 + gc.mem_alloc())
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
@@ -96,7 +96,10 @@ def mem_stats():
     fs_stat = statvfs('/')
     fs_size = fs_stat[0] * fs_stat[2]
     fs_free = fs_stat[0] * fs_stat[3]
-    print('Storage Information:')
+    print('Memory Information:')
+    print('   RAM Size     {:5,}KB'.format(int((gc.mem_alloc() + gc.mem_free())/1024)))
+    print()
+    print('Flash Storage Information:')
     print('   Flash Size   {:5,}KB'.format(flash_size()/1024))
     print('   File System  {:5,}KB'.format(fs_size/1024))
     print('   Free Space   {:5,}KB'.format(fs_free/1024))
