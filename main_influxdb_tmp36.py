@@ -91,7 +91,7 @@ def main():
     #print('Free Memory: %sKB' % int(gc.mem_free()/1024))
 
     # Read the TMP36 Sensor
-    temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=37,scale='F'), 1)
+    temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=32,scale='F'), 1)
     #print('Fahrenheit: %.01f' % temperature)
 
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
