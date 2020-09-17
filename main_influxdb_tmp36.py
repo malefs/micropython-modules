@@ -68,7 +68,7 @@ sleep_interval = 30  # Seconds
 
 # Set URL for Database Writes
 if '443' in port:
-    url = 'https://%s/write?db=%s' % (server,database)
+    url = 'https://%s/influx/write?db=%s' % (server,database)
 else:
     url = 'http://%s:%s/write?db=%s' % (server,port,database)
 
