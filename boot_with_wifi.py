@@ -107,11 +107,16 @@ def list_files():
     print()
 
 # Run selected functions at boot
-no_debug()
-wlan_connect(ssid_name, ssid_pass)
-ntp()
-mem_stats()
-list_files()
+try:
+    no_debug()
+    wlan_connect(ssid_name, ssid_pass)
+    ntp()
+    mem_stats()
+    list_files()
+except:
+    print('ERROR... Resetting Device')
+    utime.sleep(2) 
+    reset()
 
 print('boot.py: end of script')
 print('=' * 45)
