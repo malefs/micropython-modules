@@ -50,6 +50,7 @@ import AnalogDevices_TMP36
 
 if 'TinyPICO' in uname().machine:
     import TinyPICO_RGB as led
+    led.off()
 
 # Get Unique Machine ID
 from client_id import client_id
@@ -57,8 +58,22 @@ print('Client ID:', client_id)
 
 # Get InfluxDB server:port:database:measurement from key_store.db
 # i.e. influxdb.localdomain:8086:test:garage
-server,port,database,measurement = key_store.get('influxdb').split(':')
-adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':') 
+try:
+    server,port,database,measurement = key_store.get('influxdb').split(':')
+except:
+    print('Need to add settings to key_store.db...')
+    influx_config = input('Enter InfluxDB server:port:database:measurement - ')
+    key_store.set('influxdb', influx_config)
+    jwt_token = input('Enter JSON Web Token (JWT) - ')
+    key_store.set('jwt', jwt_token)
+    reset()
+    
+try:
+    adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':') 
+except:
+    print('Need to add TMP36 calibration data to key_store.db...')
+    key_store.set('tmp36', input('Enter adc_min:adc_max:temp_min:temp_max - '))
+    reset()
 
 sleep_interval = 30  # Seconds
 
@@ -111,7 +126,7 @@ def main():
         print('InfluxDB write: Success')
         print()
         if 'TinyPICO' in uname().machine:
-            led.blink_once(0,255,0) # Green
+            led.blink(0,255,0,1) # Green
     else:
         print('InfluxDB write: Failed')
         if 'TinyPICO' in uname().machine:
