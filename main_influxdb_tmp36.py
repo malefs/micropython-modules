@@ -2,7 +2,8 @@
 # Brandon Gant
 # Created: 2020-09-09
 #
-# Espressif ESP32-PICO-KIT_V4.1 board with ESP32-PICO-D4 chip 
+# Espressif SP32-PICO-KIT_V4.1 board with ESP32-PICO-D4 chip (100KB RAM without HTTPS)
+# TinyPICO ESP32 (4MB SPIRAM with HTTPS) 
 # Analog Devices TMP36
 #
 # ESP32 Configuration:
@@ -18,6 +19,8 @@
 #    put main_influxdb_tmp36.py main.py
 #    put client_id.py
 #    put AnalogDevices_TMP36.py
+#    put TinyPICO_RGB.py
+#    put urequests.py      <-- from https://github.com/micropython/micropython-lib/urequests/
 #
 #    repl
 #    from machine import reset
@@ -36,6 +39,7 @@ wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchd
 
 from machine import reset
 from time import sleep
+from uos import uname
 import urequests
 import gc 
 
@@ -44,6 +48,9 @@ from sys import exit
 
 import AnalogDevices_TMP36
 
+if 'TinyPICO' in uname().machine:
+    import TinyPICO_RGB as led
+
 # Get Unique Machine ID
 from client_id import client_id
 print('Client ID:', client_id)
@@ -51,6 +58,7 @@ print('Client ID:', client_id)
 # Get InfluxDB server:port:database:measurement from key_store.db
 # i.e. influxdb.localdomain:8086:test:garage
 server,port,database,measurement = key_store.get('influxdb').split(':')
+adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':') 
 
 sleep_interval = 30  # Seconds
 
@@ -91,7 +99,7 @@ def main():
     #print('Free Memory: %sKB' % int(gc.mem_free()/1024))
 
     # Read the TMP36 Sensor
-    temperature = round(AnalogDevices_TMP36.read_temp(gpio_pin_number=32,scale='F'), 1)
+    temperature = round(AnalogDevices_TMP36.temp_calibrated(32,int(adc_min),int(adc_max),float(temp_min),float(temp_max)), 1)
     #print('Fahrenheit: %.01f' % temperature)
 
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
@@ -102,8 +110,12 @@ def main():
     if '204' in str(response.status_code):  # HTTP Status 204 (No Content) indicates server successfull fulfilled request with no response content
         print('InfluxDB write: Success')
         print()
+        if 'TinyPICO' in uname().machine:
+            led.blink_once(0,255,0) # Green
     else:
         print('InfluxDB write: Failed')
+        if 'TinyPICO' in uname().machine:
+            led.solid(255,0,0) # Red    
         sleep(sleep_interval)
         reset()
 
