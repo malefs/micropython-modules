@@ -34,8 +34,13 @@ wdt_feed(120)  # boot.py script has 2 minutes to complete before Watchdog timer 
 
 from machine import reset
 import utime
-print()
+from uos import uname
 
+if 'TinyPICO' in uname().machine:
+    import TinyPICO_RGB as led
+    led.off()
+
+print()
 print('=' * 45)
 print('boot.py: Press CTRL+C to drop to REPL...')
 print()
@@ -66,6 +71,8 @@ def wlan_connect(ssid, password):
         while not wlan.isconnected():
             utime.sleep(1)
     print('WiFi DHCP: ', wlan.ifconfig()[0])
+    if 'TinyPICO' in uname().machine:
+        led.solid(0,0,255)
     print()
 
 # Set RTC using NTP
