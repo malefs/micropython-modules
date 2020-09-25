@@ -70,7 +70,10 @@ def wlan_connect(ssid, password):
         wlan.connect(ssid, password)
         while not wlan.isconnected():
             utime.sleep(1)
-    print('WiFi DHCP: ', wlan.ifconfig()[0])
+    print('       IP: ', wlan.ifconfig()[0])
+    print('   Subnet: ', wlan.ifconfig()[1])
+    print('  Gateway: ', wlan.ifconfig()[2])
+    print('      DNS: ', wlan.ifconfig()[3])
     if 'TinyPICO' in uname().machine:
         led.solid(0,0,255)
     print()
