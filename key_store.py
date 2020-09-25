@@ -9,9 +9,10 @@
 #    key_store.init()              <-- Creates key_store.db if it does not exist
 #    key_store.set('key','value')  <-- Sets key/value in database
 #    key_store.get('key')          <-- Gets value from database
+#    key_store.delete('key')       <-- Deletes key/value in database
 #    key_store.dumptext()          <-- Prints contents of key_store.db to screen
 #    key_store.dumpfile()          <-- Dumps contents of key_store.db to key_store.txt which ampy can retrieve
-#    key_store.remove()            <-- Removes key_store.db file
+#    key_store.wipe()              <-- Removes key_store.db file
 #
 # This script keeps private settings out of github and also logs everything locally if needed.
 #
@@ -72,6 +73,15 @@ def get(key):
     db.close()
 
 
+# Delete data from key_store.db
+def delete(key):
+    f = open(file, 'r+b')
+    db = btree.open(f)
+    del db[key]
+    db.flush()
+    db.close()
+
+
 # This just prints to the screen which is not usable in scripts.
 def dumptext():
     f = open(file, 'r+b')
@@ -94,7 +104,7 @@ def dumpfile():
 
 
 # Removes key_store.db
-def remove():
+def wipe():
     import uos
     uos.remove(file)
     print('%s removed' % file)
