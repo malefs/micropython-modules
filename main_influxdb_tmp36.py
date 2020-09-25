@@ -33,6 +33,9 @@
 #       NOTE: If there are '-' and '_' characters in the measurement name change query format to: FROM \"garage-bay\" ORDER
 #    curl -sG "http://influxdb.localdomain:8086/query?pretty=true" --data-urlencode "q=DROP DATABASE test"
 #
+# InfluxDB AUthentication:
+#    https://docs.influxdata.com/influxdb/v1.8/administration/authentication_and_authorization/
+#
 
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
 wdt_feed(60)  # main.py script has 1 minute to initialize and loop before Watchdog timer resets device
