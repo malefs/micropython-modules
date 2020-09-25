@@ -43,11 +43,7 @@ def init():
     db = btree.open(f,pagesize=512)
     db[b'ssid_name']    = input('Enter WiFi SSID - ')
     db[b'ssid_pass']    = input('Enter WiFi password - ')
-    db[b'ntp_host']     = input('Enter NTP server - ')
-    #db[b'mqtt_broker'] = input('Enter MQTT server - ')
-    #db[b'iot-api']     = input('Enter IoT server:port - ')
-    db[b'influxdb']     = input('Enter InfluxDB server:port:database:measurement - ')
-    db[b'jwt']          = input('Enter JSON Web Token (JWT) - ') 
+    db[b'ntp_host']     = 'time.cloudflare.com'
     db.flush()
     #print("%s, %s, and %s added to %s file" % (db[b'ssid_name'].decode('utf-8'), db[b'ssid_pass'].decode('utf-8'), db[b'mqtt_broker'].decode('utf-8'), file))
     db.close()
