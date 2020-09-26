@@ -68,6 +68,8 @@ def wlan_connect(ssid, password):
         wlan.active(True)
         print('WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
+        if 'TinyPICO' in uname().machine:
+            led.solid(255,0,255)  # Purple
         while not wlan.isconnected():
             utime.sleep(1)
     print('       IP: ', wlan.ifconfig()[0])
@@ -75,7 +77,7 @@ def wlan_connect(ssid, password):
     print('  Gateway: ', wlan.ifconfig()[2])
     print('      DNS: ', wlan.ifconfig()[3])
     if 'TinyPICO' in uname().machine:
-        led.solid(0,0,255)
+        led.solid(0,0,255)  # Blue
     print()
 
 # Set RTC using NTP
