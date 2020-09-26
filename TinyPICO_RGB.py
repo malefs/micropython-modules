@@ -14,12 +14,12 @@ TinyPICO.set_dotstar_power( True )
 def off():
     dotstar[0] = (0, 0, 0, 10)
 
-def blink(r,g,b,i):
+def blink(r,g,b,ms=500,i=3):
     for blinks in range (i):
         dotstar[0] = (r, g, b, 0.5)
-        sleep_ms(500)
+        sleep_ms(ms)
         dotstar[0] = (0, 0, 0, 10)
-        sleep_ms(500)
+        sleep_ms(ms)
 
 def solid(r,g,b):
     dotstar[0] = (r, g, b, 0.5)
