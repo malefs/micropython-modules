@@ -129,11 +129,11 @@ def main():
         print('InfluxDB write: Success')
         print()
         if 'TinyPICO' in uname().machine:
-            led.blink(0,255,0,1) # Green
+            led.blink(0,255,0,ms=1500,i=1) # Green
     else:
         print('InfluxDB write: Failed')
         if 'TinyPICO' in uname().machine:
-            led.solid(255,0,0) # Red    
+            led.solid(255,127,0)  # Orange    
         sleep(sleep_interval)
         reset()
 
