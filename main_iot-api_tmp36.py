@@ -27,9 +27,6 @@
 #    reset()
 #
 
-# Which ADC PIN are you using?
-ADC_PIN=37
-
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
 
 from machine import reset
@@ -45,6 +42,13 @@ from uos import uname
 # Get Unique Machine ID
 from client_id import client_id
 print('Client ID:', client_id)
+
+# Get ADC Pin from key_store.db
+if 'esp32' in uname().sysname:
+    ADC_PIN = key_store.get('ADC_PIN')
+    if ADC_PIN is None:
+        key_store.set('ADC_PIN', input('Enter ADC Pin Number - '))
+        reset()
 
 # Get iot-api server:port from key_store.db
 try:
@@ -69,10 +73,9 @@ def main():
     print()
 
     # Read the Temperature
-    hardware = uname().sysname
-    if 'esp32' in hardware:
-        field1 = round(tmp36.read_temp(ADC_PIN,'F'), 1)
-    elif 'esp8266' in hardware:
+    if 'esp32' in uname().sysname:
+        field1 = round(tmp36.read_temp(int(ADC_PIN),'F'), 1)
+    elif 'esp8266' in uname().sysname:
         field1 = round(tmp36.read_temp(0,'F'), 1)  # Only one ADC on PIN 0
     print('Temperature Reading: %sF' % field1)
 
