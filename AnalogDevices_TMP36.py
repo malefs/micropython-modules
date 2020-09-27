@@ -22,7 +22,7 @@ from uos import uname
 from time import sleep
 
 
-def read_adc(gpio_pin_number=32):
+def read_adc(gpio_pin_number):
     '''Read the Raw ADC value one time'''
     if 'esp32' in uname().sysname:
         # Source: https://docs.micropython.org/en/latest/esp32/quickref.html#adc-analog-to-digital-conversion
@@ -41,7 +41,7 @@ def read_adc(gpio_pin_number=32):
     return adc.read()
 
 
-def read_adc_average(gpio_pin_number=32):
+def read_adc_average(gpio_pin_number):
     '''Multiple rapid ADC readings dropping high/low values and averaging remaining'''
     adc_sample = []
     for x in range(80):
@@ -52,6 +52,23 @@ def read_adc_average(gpio_pin_number=32):
     return adc_average
 
 
+def read_millivolts(gpio_pin_number):
+    '''Calculate the voltage based on the ADC reading'''
+    return read_adc_average(gpio_pin_number) * (2000/4095)  # 2000mV Max / 4095 ADC Max
+
+
+def read_temp(gpio_pin_number,scale='f'):
+    temp_celsius = (read_millivolts(gpio_pin_number) - 500) / 10  # Example: 25C = (750mV - 500) / 10
+    temp_fahrenheit = (temp_celsius * 9/5) + 32
+    if scale.lower() is 'f':
+        return temp_fahrenheit
+    elif scale.lower() is 'c':
+        return temp_celsius
+    else:
+        print('unknown temperature scale')
+        exit(1)
+
+
 # Source: https://www.arduino.cc/reference/en/language/functions/math/map/
 def range_map(x, in_min, in_max, out_min, out_max):
     '''Python equivalent to Arduino map() function.'''
@@ -60,5 +77,4 @@ def range_map(x, in_min, in_max, out_min, out_max):
 
 def temp_calibrated(gpio_pin_number,adc_min,adc_max,temp_min,temp_max):
     '''Use external accurate Temperature device to measure high/low ADC and Temperature values to calibrate sensor.'''
-    return range_map(read_adc_average(),in_min=adc_min,in_max=adc_max,out_min=temp_min,out_max=temp_max)
-
+    return range_map(read_adc_average(gpio_pin_number),in_min=adc_min,in_max=adc_max,out_min=temp_min,out_max=temp_max)
