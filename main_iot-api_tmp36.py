@@ -1,21 +1,34 @@
 #
 # Brandon Gant
 # Created: 2019-12-17
-# Updated: 2020-02-14
+# Updated: 2020-09-27
 #
 # Espressif ESP8266-DevKitc_V1 board with ESP-WROOM-02D chip
 # Espressif ESP32-PICO-KIT_V4.1 board with ESP32-PICO-D4 chip 
 # TMP36 temperature sensor with Vout connected to ADC pin
 #
-# Files required to run this script:
-#    boot.py (boot_with_wifi.py)
-#    key_store.py
-#    client_id.py
-#    soft_wdt.py
-#    main.py (main_iot-api_tmp36.py)
-#    AnalogDevices_TMP36.py
-#    iot-api.py
+# ESP32 Configuration:
+#    esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
+#    esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-idf3-20200902-v1.13.bin
+#    mpfshell
+#    open ttyUSB0
 #
+#    put boot_with_wifi.py boot.py
+#    put key_store.py
+#    put soft_wdt.py
+#
+#    put main_iot-api_tmp36.py main.py
+#    put client_id.py
+#    put AnalogDevices_TMP36.py
+#    put iot-api.py
+#
+#    repl
+#    from machine import reset
+#    reset()
+#
+
+# Which ADC PIN are you using?
+ADC_PIN=37
 
 from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
 
@@ -34,7 +47,12 @@ from client_id import client_id
 print('Client ID:', client_id)
 
 # Get iot-api server:port from key_store.db
-server,port = key_store.get('iot-api').split(':')
+try:
+    server,port = key_store.get('iot-api').split(':')
+except:
+    server = input('Enter iot-api server:port - ')
+    key_store.set('iot-api', server)
+    reset()
 
 if server == 'api.thingspeak.com':
     client_id = key_store.get('thingspeak_api_key')
@@ -53,9 +71,9 @@ def main():
     # Read the Temperature
     hardware = uname().sysname
     if 'esp32' in hardware:
-        field1 = round(tmp36.read_temp(37,'F'), 1)
+        field1 = round(tmp36.read_temp(ADC_PIN,'F'), 1)
     elif 'esp8266' in hardware:
-        field1 = round(tmp36.read_temp(0,'F'), 1)
+        field1 = round(tmp36.read_temp(0,'F'), 1)  # Only one ADC on PIN 0
     print('Temperature Reading: %sF' % field1)
 
     # Send the Data to Server
