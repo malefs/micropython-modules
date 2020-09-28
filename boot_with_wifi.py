@@ -19,6 +19,7 @@
 #     mpfs [/]> open ttyUSB0
 #     mpfs [/]> put boot_with_wifi.py boot.py
 #     mpfs [/]> put key_store.py
+#     mpfs [/]> put soft_wdt.py
 #     mpfs [/]> repl
 #     >>>  <Ctrl+] to exit repl>
 #
@@ -104,12 +105,12 @@ def mem_stats():
     fs_size = fs_stat[0] * fs_stat[2]
     fs_free = fs_stat[0] * fs_stat[3]
     print('Memory Information:')
-    print('   RAM Size     {:5,}KB'.format(int((gc.mem_alloc() + gc.mem_free())/1024)))
+    print('   RAM Size     {:5}KB'.format(int((gc.mem_alloc() + gc.mem_free())/1024)))
     print()
     print('Flash Storage Information:')
-    print('   Flash Size   {:5,}KB'.format(flash_size()/1024))
-    print('   File System  {:5,}KB'.format(fs_size/1024))
-    print('   Free Space   {:5,}KB'.format(fs_free/1024))
+    print('   Flash Size   {:5}KB'.format(flash_size()/1024))
+    print('   File System  {:5}KB'.format(fs_size/1024))
+    print('   Free Space   {:5}KB'.format(fs_free/1024))
     print()
 
 def list_files():
