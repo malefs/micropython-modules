@@ -14,24 +14,24 @@
 #
 #    put boot_with_wifi.py boot.py
 #    put key_store.py
-#    put soft_wdt.py
+#    put soft_wdt.py   <-- https://github.com/peterhinch/micropython-samples/blob/master/soft_wdt/soft_wdt.py
 #
 #    put main_influxdb_tmp36.py main.py
 #    put client_id.py
 #    put AnalogDevices_TMP36.py
 #    put TinyPICO_RGB.py
-#    put urequests.py      <-- from https://github.com/micropython/micropython-lib/urequests/
+#    put urequests.py  <-- https://github.com/micropython/micropython-lib/blob/master/urequests/urequests.py
 #
-#    repl
+#    repl   <-- Ctrl+] to exit repl back to mpfshell
 #    from machine import reset
 #    reset()
 #
 # InfluxDB query examples:
-#    curl -sG "http://influxdb.localdomain:8086/query?pretty=true" --data-urlencode "q=SHOW DATABASES"
-#    curl -sG "http://influxdb.localdomain:8086/query?pretty=true" --data-urlencode "db=test" --data-urlencode "q=SHOW MEASUREMENTS"
-#    curl -sG "http://influxdb.localdomain:8086/query?pretty=true" --data-urlencode "db=test" --data-urlencode "q=SELECT * FROM garage ORDER BY DESC LIMIT 3"
+#    curl -sG "http://localhost:8086/query?pretty=true" --data-urlencode "q=SHOW DATABASES"
+#    curl -sG "http://localhost:8086/query?pretty=true" --data-urlencode "db=test" --data-urlencode "q=SHOW MEASUREMENTS"
+#    curl -sG "http://localhost:8086/query?pretty=true" --data-urlencode "db=test" --data-urlencode "q=SELECT * FROM garage ORDER BY DESC LIMIT 3"
 #       NOTE: If there are '-' and '_' characters in the measurement name change query format to: FROM \"garage-bay\" ORDER
-#    curl -sG "http://influxdb.localdomain:8086/query?pretty=true" --data-urlencode "q=DROP DATABASE test"
+#    curl -sG "http://localhost:8086/query?pretty=true" --data-urlencode "q=DROP DATABASE test"
 #
 # InfluxDB AUthentication:
 #    https://docs.influxdata.com/influxdb/v1.8/administration/authentication_and_authorization/
