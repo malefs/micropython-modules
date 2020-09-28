@@ -59,6 +59,13 @@ if 'TinyPICO' in uname().machine:
 from client_id import client_id
 print('Client ID:', client_id)
 
+# Get ADC Pin from key_store.db
+if 'esp32' in uname().sysname:
+    ADC_PIN = key_store.get('ADC_PIN')
+    if ADC_PIN is None:
+        key_store.set('ADC_PIN', input('Enter ADC Pin Number - '))
+        reset()
+
 # Get InfluxDB server:port:database:measurement from key_store.db
 # i.e. influxdb.localdomain:8086:test:garage
 try:
@@ -117,7 +124,7 @@ def main():
     #print('Free Memory: %sKB' % int(gc.mem_free()/1024))
 
     # Read the TMP36 Sensor
-    temperature = round(AnalogDevices_TMP36.temp_calibrated(32,int(adc_min),int(adc_max),float(temp_min),float(temp_max)), 1)
+    temperature = round(AnalogDevices_TMP36.temp_calibrated(int(ADC_PIN),int(adc_min),int(adc_max),float(temp_min),float(temp_max)), 1)
     #print('Fahrenheit: %.01f' % temperature)
 
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
