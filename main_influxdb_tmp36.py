@@ -58,25 +58,20 @@ if 'TinyPICO' in uname().machine:
 # Get Unique Machine ID
 from client_id import client_id
 print('Client ID:', client_id)
+print()
 
 # Get ADC Pin from key_store.db
 if 'esp32' in uname().sysname:
-    ADC_PIN = key_store.get('ADC_PIN')
-    if ADC_PIN is None:
+    if key_store.get('ADC_PIN') is None:
         key_store.set('ADC_PIN', input('Enter ADC Pin Number - '))
-        reset()
+    ADC_PIN = key_store.get('ADC_PIN')
 
 # Get InfluxDB server:port:database:measurement from key_store.db
 # i.e. influxdb.localdomain:8086:test:garage
-try:
-    server,port,database,measurement = key_store.get('influxdb').split(':')
-except:
+if key_store.get('influxdb') is None:
     print('Need to add settings to key_store.db...')
-    influx_config = input('Enter InfluxDB server:port:database:measurement - ')
-    key_store.set('influxdb', influx_config)
-    jwt_token = input('Enter JSON Web Token (JWT) - ')
-    key_store.set('jwt', jwt_token)
-    reset()
+    key_store.set('influxdb', input('Enter InfluxDB server:port:database:measurement - '))
+server,port,database,measurement = key_store.get('influxdb').split(':')
     
 try:
     adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':') 
@@ -110,8 +105,9 @@ headers = {
     'Content-type': 'application/x-www-form-urlencoded',
     'Authorization': ''
 }
+if key_store.get('jwt') is None:
+    key_store.set('jwt', input('Enter JSON Web Token (JWT) - '))
 headers['Authorization'] = 'Bearer %s' % key_store.get('jwt')
-
 
 print('=' * 45)
 print()
