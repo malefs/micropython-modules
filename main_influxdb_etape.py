@@ -54,6 +54,11 @@ if 'esp32' in uname().sysname:
     if key_store.get('ADC_PIN') is None:
         key_store.set('ADC_PIN', input('Enter ADC Pin Number - '))
     ADC_PIN = key_store.get('ADC_PIN')
+elif 'esp8266' in uname().sysname:
+    ADC_PIN = 0  # gpio_pin_number is ignored since there is only one ADC on ESP8266
+else:
+    print('unknown hardware')
+    exit(1)
 
 # Get InfluxDB server:port:database:measurement from key_store.db
 # i.e. influxdb.localdomain:8086:Garage:DHT22
