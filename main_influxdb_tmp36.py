@@ -76,13 +76,6 @@ if key_store.get('influxdb') is None:
     key_store.set('influxdb', input('Enter InfluxDB server:port:database:measurement - '))
 server,port,database,measurement = key_store.get('influxdb').split(':')
     
-try:
-    adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':') 
-except:
-    print('Need to add TMP36 calibration data to key_store.db...')
-    key_store.set('tmp36', input('Enter adc_min:adc_max:temp_min:temp_max - '))
-    reset()
-
 sleep_interval = 30  # Seconds
 
 # Create database if it does not already exist (only works without InfluxDB authentication)
@@ -113,6 +106,15 @@ if key_store.get('jwt') is None:
     key_store.set('jwt', input('Enter JSON Web Token (JWT) - '))
 headers['Authorization'] = 'Bearer %s' % key_store.get('jwt')
 
+# Calibrate TMP36 Sensor?
+if key_store.get('tmp36') is None:
+    print('This field can be blank to use read sensor without calibration')
+    key_store.set('tmp36', input('Enter adc_min:adc_max:temp_min:temp_max - '))
+if key_store.get('tmp36') is not '':  # Blank string
+    adc_min,adc_max,temp_min,temp_max = key_store.get('tmp36').split(':')
+else:
+    adc_min = ''
+
 # Print some helpful information:
 print('ADC Pin Number:  %s' % ADC_PIN)
 print('Client ID:       %s' % client_id)
@@ -131,7 +133,10 @@ def main():
     #print('Free Memory: %sKB' % int(gc.mem_free()/1024))
 
     # Read the TMP36 Sensor
-    temperature = round(AnalogDevices_TMP36.temp_calibrated(int(ADC_PIN),int(adc_min),int(adc_max),float(temp_min),float(temp_max)), 1)
+    if adc_min is '':
+        temperature = round(AnalogDevices_TMP36.read_temp(int(ADC_PIN)),1)
+    else:
+        temperature = round(AnalogDevices_TMP36.temp_calibrated(int(ADC_PIN),int(adc_min),int(adc_max),float(temp_min),float(temp_max)), 1)
     #print('Fahrenheit: %.01f' % temperature)
 
     # Send the Data to Server (Try to avoid '-' and '_' characters in InfluxDB Key names)
