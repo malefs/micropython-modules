@@ -57,8 +57,6 @@ if 'TinyPICO' in uname().machine:
 
 # Get Unique Machine ID
 from client_id import client_id
-print('Client ID:', client_id)
-print()
 
 # Get ADC Pin from key_store.db
 if 'esp32' in uname().sysname:
@@ -82,7 +80,7 @@ except:
 
 sleep_interval = 30  # Seconds
 
-# Create database if it does not already exist (only works with no authentication or admin rights)
+# Create database if it does not already exist (only works without InfluxDB authentication)
 #url = 'http://%s:%s/query' % (server,port)
 #headers = {'Content-type': 'application/x-www-form-urlencoded'}
 #data = 'q=SHOW DATABASES'
@@ -106,9 +104,17 @@ headers = {
     'Authorization': ''
 }
 if key_store.get('jwt') is None:
+    print('JSON Web Token can be blank if InfluxDB does not use authentication')
     key_store.set('jwt', input('Enter JSON Web Token (JWT) - '))
 headers['Authorization'] = 'Bearer %s' % key_store.get('jwt')
 
+# Print some helpful information:
+print('ADC Pin Number:  %s' % ADC_PIN)
+print('Client ID:       %s' % client_id)
+print('InfluxDB Server: %s:%s' % (server,port))
+print('Database Name:   %s' % database)
+print('Measurement:     %s' % measurement)
+print()
 print('=' * 45)
 print()
 
