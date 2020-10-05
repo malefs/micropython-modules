@@ -172,6 +172,7 @@ else:
 #--------------------------------
 # Print some helpful information:
 #--------------------------------
+print()
 print('Sensor:          %s' % sensor)
 print('Sensor Pin:      %s' % SENSOR_PIN)
 print('Read Interval:   %s seconds' % sleep_interval)
