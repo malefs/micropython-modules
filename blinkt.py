@@ -7,19 +7,24 @@
 #    Blinkt 16  <-->  ESP32 SPI MOSI (Data)
 #    Blinkt 18  <-->  ESP32 SPI SCK (Clock)
 #
+# MicroPython Configuration:
+#    put micropython_dotstar.py
+#    put blinkt.py
+#    put <Blinkt script wrritten for Raspberry Pi>.py
+#
 # Usage:
-#    import micropython_blinkt as blinkt
-#    <run Blinkt script written for Raspberry Pi in MicroPython> 
+#    import <Blinkt script written for Raspberry Pi> 
 #
 # Sources: 
-#    https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
+#    https://github.com/mattytrentini/micropython-dotstar
 #    https://pinout.xyz/pinout/blinkt
+#    https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
 #
 
 from micropython_dotstar import DotStar
 from machine import SPI,Pin,reset
 
-spi = SPI(sck=Pin(18), mosi=Pin(23), miso=Pin(19))  # Pin 19 is not used or cabled
+spi = SPI(sck=Pin(18), mosi=Pin(23), miso=Pin(19))  # Pin 19 is not used or wired
 dotstar = DotStar(spi, 8)  # 8 LED's to Control (0 thru 7)
 
 def clear():
@@ -37,3 +42,4 @@ def set_brightness(brightness):
 def set_clear_on_exit():
     # Not sure what to do with this command
     return
+
