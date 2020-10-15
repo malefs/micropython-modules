@@ -1,4 +1,3 @@
-
 import blinkt
 from time import sleep
 from machine import reset
@@ -41,8 +40,10 @@ def eyes_looking(cycles):
     blue   = (0,0,255)
     purple = (255,0,255)
     teal   = (0,255,255)
-    orange = (255,255,0)
-    eye_color = (green, red, blue, purple, orange, teal)
+    yellow = (255,255,0)
+    orange = (255,50,0)
+    white  = (255,255,255)
+    eye_color = (green, red, blue, purple, orange, yellow)
     r,g,b = random.choice(eye_color)
 
     blinkt.set_brightness(random.randint(1,10)/100)
@@ -129,20 +130,14 @@ def police(cycles):
 try:
     while True:
         weighted_choice = random.randint(0,100)
-        if weighted_choice < 80:
+        if weighted_choice < 90:
             eyes_looking(random.randint(5,10))
-        elif weighted_choice < 90:
-            larson_scanner(random.randint(2,6))
-        else: 
+        elif weighted_choice < 95:
             police(random.randint(5,10))
-
-        #states = (eyes_looking, larson_scanner, police)
-        #random_function = random.choice(states)
-        #cycles = random.randint(5,10)
-        #random_function(cycles)
-        sleep(random.randint(5,40))
+        else: 
+            larson_scanner(random.randint(50,90))
+        sleep(random.randint(5,30))
 
 except KeyboardInterrupt:
     blinkt.clear()
-    blinkt.show()
 
