@@ -2,7 +2,7 @@
 import blinkt
 from time import sleep
 from machine import reset
-from random import randint
+import random
 
 print("Press Ctrl+C to stop script...")
 
@@ -33,7 +33,6 @@ def eyes_left(seconds):
     sleep(seconds)
     blinkt.clear()
     sleep(0.2)
-    
 
 def eyes_right(seconds):
     blinkt.clear()
@@ -46,14 +45,14 @@ def eyes_right(seconds):
     blinkt.clear()
     sleep(0.2)
 
-
 def eyes_looking(cycles):
-    eyes_forward(3)
-    eyes_forward(3)
-    eyes_left(2)
-    eyes_right(2)
-    eyes_forward(4)
- 
+    states = (eyes_forward, eyes_left, eyes_right)
+    loops = 1
+
+    while loops < cycles:    
+        random_function = random.choice(states)
+        random_function(3)
+        loops += 1
 
 def larson_scanner(cycles):
     blinkt.clear()  # Clear LED's
@@ -126,7 +125,7 @@ def police(cycles):
 
 try:
     while True:
-        eyes_looking(30)
+        eyes_looking(5)
         silence(10)
         police(15)
         silence(10)
