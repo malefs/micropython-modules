@@ -7,56 +7,57 @@ import random
 print("Press Ctrl+C to stop script...")
 
 
-def silence(seconds):
-    blinkt.clear()  # Clear LED's
-    sleep(seconds)
-
-
-def eyes_forward(seconds):
+def eyes_forward(seconds,r,g,b):
     blinkt.clear()
-    blinkt.set_brightness(0.1)
-
-    # Forward
-    blinkt.set_pixel(1,0,255,0)
-    blinkt.set_pixel(6,0,255,0)
+    blinkt.set_pixel(1,r,g,b)
+    blinkt.set_pixel(6,r,g,b)
     sleep(seconds)
     blinkt.clear()
     sleep(0.2)
   
-def eyes_left(seconds):
+def eyes_left(seconds,r,g,b):
     blinkt.clear()
-    blinkt.set_brightness(0.1)
-
-    # Left
-    blinkt.set_pixel(0,0,255,0)
-    blinkt.set_pixel(5,0,255,0)
+    blinkt.set_pixel(0,r,g,b)
+    blinkt.set_pixel(5,r,g,b)
     sleep(seconds)
     blinkt.clear()
     sleep(0.2)
 
-def eyes_right(seconds):
+def eyes_right(seconds,r,g,b):
     blinkt.clear()
-    blinkt.set_brightness(0.1)
-
-    # Right
-    blinkt.set_pixel(2,0,255,0)
-    blinkt.set_pixel(7,0,255,0)
+    blinkt.set_pixel(2,r,g,b)
+    blinkt.set_pixel(7,r,g,b)
     sleep(seconds)
     blinkt.clear()
     sleep(0.2)
 
 def eyes_looking(cycles):
+    blinkt.clear()
     states = (eyes_forward, eyes_left, eyes_right)
     loops = 1
 
+    green  = (0,255,0)
+    red    = (255,0,0)
+    blue   = (0,0,255)
+    purple = (255,0,255)
+    teal   = (0,255,255)
+    orange = (255,255,0)
+    eye_color = (green, red, blue, purple, orange, teal)
+    r,g,b = random.choice(eye_color)
+
+    blinkt.set_brightness(random.randint(1,10)/100)
+
     while loops < cycles:    
         random_function = random.choice(states)
-        random_function(3)
+        open = random.randint(2,6)
+        random_function(open,r,g,b)
         loops += 1
+    blinkt.clear()
+
 
 def larson_scanner(cycles):
-    blinkt.clear()  # Clear LED's
-    blinkt.set_brightness(0.1)
+    blinkt.clear()
+    blinkt.set_brightness(0.5)
     loops = 1
 
     # The idea is that the leading LED is at 100%, the next at 75%, 50%, etc. 
@@ -81,10 +82,11 @@ def larson_scanner(cycles):
         blinkt.show()
         sleep(0.1)
         loops += 1
+    blinkt.clear()
 
 
 def police(cycles):
-    blinkt.clear()  # Clear LED's
+    blinkt.clear()
     sleep_interval = 0.05  # Seconds
     blinkt.set_brightness(1)
     loops = 1
@@ -121,17 +123,24 @@ def police(cycles):
             sleep(sleep_interval)
 
         loops += 1
+    blinkt.clear()
 
 
 try:
     while True:
-        eyes_looking(5)
-        silence(10)
-        police(15)
-        silence(10)
-        larson_scanner(100)
-        silence(10)
-       
+        weighted_choice = random.randint(0,100)
+        if weighted_choice < 80:
+            eyes_looking(random.randint(5,10))
+        elif weighted_choice < 90:
+            larson_scanner(random.randint(2,6))
+        else: 
+            police(random.randint(5,10))
+
+        #states = (eyes_looking, larson_scanner, police)
+        #random_function = random.choice(states)
+        #cycles = random.randint(5,10)
+        #random_function(cycles)
+        sleep(random.randint(5,40))
 
 except KeyboardInterrupt:
     blinkt.clear()
