@@ -1,10 +1,15 @@
 import blinkt
-from time import sleep
+from time import sleep,ticks_cpu
 from machine import reset
 import random
+import gc
 
 print("Press Ctrl+C to stop script...")
 
+# Random numbers are the same every reset (this appears to fix it)
+random.seed(ticks_cpu())
+for x in range(0,random.randint(25,75)): random.random()
+random.seed(ticks_cpu())
 
 def eyes_forward(seconds,r,g,b):
     blinkt.clear()
@@ -129,6 +134,7 @@ def police(cycles):
 
 try:
     while True:
+        gc.collect() 
         weighted_choice = random.randint(0,100)
         if weighted_choice < 90:
             eyes_looking(random.randint(5,10))
