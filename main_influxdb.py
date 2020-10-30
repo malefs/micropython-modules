@@ -89,6 +89,32 @@ else:
 #-------------------------------------------
 # Set JSON Web Token (JWT) from key_store.db
 #-------------------------------------------
+#
+# If you enabled authentication in InfluxDB you need
+# to create a JSON Web Token to write to a database:
+#
+#    https://www.unixtimestamp.com/index.php
+#        Create a future Unix Timestamp expiration   
+#
+#    https://jwt.io/#debugger-io
+#        HEADER
+#            {
+#              "alg": "HS256",
+#              "typ": "JWT"
+#             }
+#        PAYLOAD
+#            {
+#              "username": "<InfluxDB username with WRITE to DATABASE>",
+#              "exp": <Unix Timestamp expiration>
+#            }
+#        VERIFY SIGNATURE
+#            HMACSHA256(
+#              base64UrlEncode(header) + "." +
+#              base64UrlEncode(payload),
+#              <shared secret phrase set in InfluxDB>
+#            )
+#
+
 headers = {
     'Content-type': 'application/x-www-form-urlencoded',
     'Authorization': ''
