@@ -114,6 +114,8 @@ else:
 #              <shared secret phrase set in InfluxDB>
 #            )
 #
+# Source: https://docs.influxdata.com/influxdb/v1.8/administration/authentication_and_authorization/
+#
 
 headers = {
     'Content-type': 'application/x-www-form-urlencoded',
