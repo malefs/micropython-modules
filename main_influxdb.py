@@ -159,9 +159,9 @@ SENSOR_PIN = int(key_store.get('SENSOR_PIN'))
 
 if 'Milone_eTape.py' in listdir():
     sensor = 'Milone eTape Water Level'
-    import Milone_eTape
+    import Milone_eTape  # Pin Number 32 hard-coded in module
     def read_sensor():
-        return "%s,device=%s inches=%.1f" % (measurement, client_id, Milone_eTape.inches(SENSOR_PIN))
+        return "%s,device=%s inches=%.1f" % (measurement, client_id, Milone_eTape.inches())
 
 elif 'SparkFun_TMP102.py' in listdir():
     sensor = 'SparkFun TMP102 Temperature'
