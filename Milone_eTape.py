@@ -44,7 +44,7 @@ def range_map(x, in_min, in_max, out_min, out_max):
     return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min
 
 
-def inches():
+def inches(gpio_pin_number=32):
     # Based on manual measurements of etape ADC values at half-inch increments
     # Min ADC 480 is  1.5 inches or less (1.0 and less is 472)
     # Max ADC 620 is 10.0 inches
