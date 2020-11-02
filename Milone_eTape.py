@@ -44,13 +44,16 @@ def range_map(x, in_min, in_max, out_min, out_max):
     return (x-in_min) * (out_max-out_min) / (in_max-in_min) + out_min
 
 
-def inches(in_min=480, in_max=620):
+def inches():
     # Based on manual measurements of etape ADC values at half-inch increments
     # Min ADC 480 is  1.5 inches or less (1.0 and less is 472)
     # Max ADC 620 is 10.0 inches
     #
     # Sump switches  ON at about 7 inches
     # Sump switches OFF at about 3 inches and fills with water
+
+    in_min = 480
+    in_max = 620
 
     out_min = 1.5
     out_max = 10.0
