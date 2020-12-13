@@ -17,6 +17,13 @@
 #    mpfshell
 #    open ttyUSB0
 #
+#    repl
+#    import os
+#    os.umount('/')
+#    os.VfsLfs2.mkfs(bdev)  <-- Replace easily corrupted FAT filesystem with Littlefs
+#    os.mount(bdev, '/')
+#    Ctrl+]
+#
 #    put boot_with_wifi.py boot.py
 #    put key_store.py
 #    put soft_wdt.py
@@ -28,7 +35,7 @@
 #
 #    put Milone_eTape.py  --OR-- AnalogDevices_TMP36.py --OR-- SparkFun_TMP102.py --OR-- DHT22.py
 #
-#    repl   <-- Ctrl+] to exit repl back to mpfshell
+#    repl 
 #    from machine import reset
 #    reset()
 #
