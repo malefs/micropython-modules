@@ -128,7 +128,9 @@ try:
     list_files()
 except:
     print('ERROR... Resetting Device')
-    utime.sleep(2) 
+    if 'TinyPICO' in uname().machine:
+        led.solid(255,0,0)  # Red
+    utime.sleep(3) 
     reset()
 
 print('boot.py: end of script')
