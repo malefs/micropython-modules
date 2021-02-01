@@ -1,3 +1,5 @@
+# Source: https://forum.micropython.org/viewtopic.php?t=7228&start=10
+
 from flashbdev import bdev
 
 def check():
