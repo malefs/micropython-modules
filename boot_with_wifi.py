@@ -50,7 +50,7 @@ print()
 print('=' * 45)
 print('boot.py: Press CTRL+C to drop to REPL...')
 print()
-utime.sleep(3)  # A chance to hit Ctrl+C in REPL
+#utime.sleep(3)  # A chance to hit Ctrl+C in REPL
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
@@ -144,11 +144,16 @@ try:
     mem_stats()
     filesystem()
     list_files()
+except KeyboardInterrupt:
+    wdt_feed(WDT_CANCEL)  # Cancel/Disable Watchdog Timer when Ctrl+C pressed
+    if 'TinyPICO' in uname().machine:
+        led.off()
+    exit()
 except:
     print('ERROR... Resetting Device')
     if 'TinyPICO' in uname().machine:
         led.solid(255,0,0)  # Red
-    utime.sleep(3)  # A chance to hit Ctrl+C in REPL
+    #utime.sleep(3)  # A chance to hit Ctrl+C in REPL
     reset()
 
 print('boot.py: end of script')
