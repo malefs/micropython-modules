@@ -50,7 +50,7 @@ print()
 print('=' * 45)
 print('boot.py: Press CTRL+C to drop to REPL...')
 print()
-utime.sleep(3)
+utime.sleep(3)  # A chance to hit Ctrl+C in REPL
 
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
@@ -73,19 +73,20 @@ def wlan_connect(ssid, password):
     wlan = network.WLAN(network.STA_IF)
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
-        print('      MAC: ', hexlify(wlan.config('mac'),':').decode())
-        print('WiFi SSID: ', ssid)
+        print('       MAC: ', hexlify(wlan.config('mac'),':').decode())
+        print(' WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
         if 'TinyPICO' in uname().machine:
             led.solid(255,0,255)  # Purple
         start_wifi = utime.ticks_ms()
         while not wlan.isconnected():
             if utime.ticks_diff(utime.ticks_ms(), start_wifi) > 20000:  # 20 second timeout
+                print('Wifi Timeout... Resetting Device')
                 reset()
-    print('       IP: ', wlan.ifconfig()[0])
-    print('   Subnet: ', wlan.ifconfig()[1])
-    print('  Gateway: ', wlan.ifconfig()[2])
-    print('      DNS: ', wlan.ifconfig()[3])
+    print('        IP: ', wlan.ifconfig()[0])
+    print('    Subnet: ', wlan.ifconfig()[1])
+    print('   Gateway: ', wlan.ifconfig()[2])
+    print('       DNS: ', wlan.ifconfig()[3])
     if 'TinyPICO' in uname().machine:
         led.solid(0,0,255)  # Blue
     print()
@@ -95,10 +96,13 @@ def ntp():
     import ntptime
     ntptime.host = key_store.get('ntp_host')
     print("NTP Server:", ntptime.host)
-    while utime.time() < 10000:  # Retry until clock is set
+    start_ntp = utime.ticks_ms()
+    while utime.time() < 10000:  # Clock is not set with NTP if unixtime is less than 10000
         ntptime.settime()
-        utime.sleep(2)
-    print('UTC Time:   {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
+        if utime.ticks_diff(utime.ticks_ms(), start_ntp) > 10000:  # 10 second timeout
+                print('NTP Timeout... Resetting Device')
+                reset()
+    print('  UTC Time: {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print()
          
 # Suppress ESP debug messages in the REPL
@@ -124,7 +128,7 @@ def mem_stats():
 
 def filesystem():
     from detect_filesystem import check
-    print('File System format: ', check())
+    print('File System format:', check())
     print()
 
 def list_files():
@@ -137,7 +141,7 @@ def list_files():
 try:
     no_debug()
     wlan_connect(ssid_name, ssid_pass)
-    ntp()
+    ntp()          # Only needed if using HTTPS or local timestamp data logging 
     mem_stats()
     filesystem()
     list_files()
@@ -145,7 +149,7 @@ except:
     print('ERROR... Resetting Device')
     if 'TinyPICO' in uname().machine:
         led.solid(255,0,0)  # Red
-    utime.sleep(3) 
+    utime.sleep(3)  # A chance to hit Ctrl+C in REPL
     reset()
 
 print('boot.py: end of script')
