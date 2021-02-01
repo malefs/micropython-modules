@@ -69,9 +69,11 @@ except:
 # Connect to WiFI
 def wlan_connect(ssid, password):
     import network
+    from ubinascii import hexlify
     wlan = network.WLAN(network.STA_IF)
     if not wlan.active() or not wlan.isconnected():
         wlan.active(True)
+        print('      MAC: ', hexlify(wlan.config('mac'),':').decode())
         print('WiFi SSID: ', ssid)
         wlan.connect(ssid, password)
         if 'TinyPICO' in uname().machine:
@@ -122,7 +124,7 @@ def mem_stats():
 
 def filesystem():
     from detect_filesystem import check
-    print('File System is: ', check())
+    print('File System format: ', check())
     print()
 
 def list_files():
