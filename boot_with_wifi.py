@@ -2,7 +2,7 @@
 #
 # Brandon Gant
 # Created: 2019-02-08
-# Updated: 2020-09-09
+# Updated: 2021-02-01
 #
 # Source: https://github.com/micropython/micropython/tree/master/ports/esp32#configuring-the-wifi-and-using-the-board
 # Source: https://boneskull.com/micropython-on-esp32-part-1/
@@ -13,6 +13,10 @@
 #     key_store.py
 #     soft_wdt.py
 #
+# Optional files:
+#     TinyPICO_RGB.py
+#     detect_filesystem.py
+#
 # Usage:
 #     $ pip3 install --user mpfshell
 #     $ mpfshell
@@ -20,6 +24,7 @@
 #     mpfs [/]> put boot_with_wifi.py boot.py
 #     mpfs [/]> put key_store.py
 #     mpfs [/]> put soft_wdt.py
+#     mpfs [/]> put detect_filesystem.py
 #     mpfs [/]> repl
 #     >>>  <Ctrl+] to exit repl>
 #
@@ -71,8 +76,10 @@ def wlan_connect(ssid, password):
         wlan.connect(ssid, password)
         if 'TinyPICO' in uname().machine:
             led.solid(255,0,255)  # Purple
+        start_wifi = utime.ticks_ms()
         while not wlan.isconnected():
-            utime.sleep(1)
+            if utime.ticks_diff(utime.ticks_ms(), start_wifi) > 20000:  # 20 second timeout
+                reset()
     print('       IP: ', wlan.ifconfig()[0])
     print('   Subnet: ', wlan.ifconfig()[1])
     print('  Gateway: ', wlan.ifconfig()[2])
@@ -113,6 +120,11 @@ def mem_stats():
     print('   Free Space   {:5,}KB'.format(int(fs_free/1024)))
     print()
 
+def filesystem():
+    from detect_filesystem import check
+    print('File System is: ', check())
+    print()
+
 def list_files():
     from uos import listdir
     print("List of files on this device:")
@@ -125,6 +137,7 @@ try:
     wlan_connect(ssid_name, ssid_pass)
     ntp()
     mem_stats()
+    filesystem()
     list_files()
 except:
     print('ERROR... Resetting Device')
