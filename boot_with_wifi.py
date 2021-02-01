@@ -95,14 +95,14 @@ def wlan_connect(ssid, password):
 def ntp():
     import ntptime
     ntptime.host = key_store.get('ntp_host')
-    print("NTP Server:", ntptime.host)
+    print("NTP Server: ", ntptime.host)
     start_ntp = utime.ticks_ms()
     while utime.time() < 10000:  # Clock is not set with NTP if unixtime is less than 10000
         ntptime.settime()
         if utime.ticks_diff(utime.ticks_ms(), start_ntp) > 10000:  # 10 second timeout
                 print('NTP Timeout... Resetting Device')
                 reset()
-    print('  UTC Time: {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
+    print('  UTC Time:  {}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*utime.localtime()))
     print()
          
 # Suppress ESP debug messages in the REPL
@@ -122,17 +122,16 @@ def mem_stats():
     print()
     print('Flash Storage Information:')
     print('   Flash Size   {:5,}KB'.format(int(flash_size()/1024)))
-    print('   File System  {:5,}KB'.format(int(fs_size/1024)))
+    print('   User Space   {:5,}KB'.format(int(fs_size/1024)))
     print('   Free Space   {:5,}KB'.format(int(fs_free/1024)))
-    print()
 
 def filesystem():
     from detect_filesystem import check
-    print('File System format:', check())
-    print()
+    print('   File System ', check())
 
 def list_files():
     from uos import listdir
+    print()
     print("List of files on this device:")
     print('   %s' % '\n   '.join(map(str, sorted(listdir('/')))))
     print()
