@@ -16,5 +16,4 @@ def dump(line_count=4, chunk_size=16):
         print('%04x - %04x' % (offset, offset + chunk_size - 1), end=' - ')
         bdev.readblocks(block_num, buf)
         print(' '.join('%02x' % char for char in buf), end=' - ')
-        print(''.join(chr(char) if 32 < char < 177 else '.' for char in buf))
-
+        print(''.join(chr(char) if 32 < char < 127 else '.' for char in buf))
