@@ -11,10 +11,10 @@
 # Files required to run this script:
 #     boot.py (boot_with_wifi.py)
 #     key_store.py
-#     soft_wdt.py
 #
 # Optional files:
 #     TinyPICO_RGB.py
+#     soft_wdt.py
 #     detect_filesystem.py
 #
 # Usage:
@@ -35,26 +35,47 @@
 #     >>>  <Ctrl+a then Shift+k to exit repl>
 #
 
-from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
-wdt_feed(120)  # boot.py script has 2 minutes to complete before Watchdog timer resets device
-
-from machine import reset
-import utime
-from uos import uname
-
-if 'TinyPICO' in uname().machine:
-    import TinyPICO_RGB as led
-    led.off()
-
 print()
 print('=' * 45)
 print('boot.py: Press CTRL+C to drop to REPL...')
 print()
 #utime.sleep(3)  # A chance to hit Ctrl+C in REPL
 
+try:
+    from soft_wdt import wdt_feed, WDT_CANCEL  # Initialize Watchdog Timer
+    wdt_feed(120)  # boot.py script has 2 minutes to complete before Watchdog timer resets device
+except:
+    print('soft_wdt.py module is not present')
+    pass  # still works if soft_wdt.py is missing 
+
+from machine import reset
+import utime
+from uos import uname
+
 # Create exceptions (feedback) in cases where normal RAM allocation fails (e.g. interrupts)
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
+
+if 'TinyPICO' in uname().machine:
+    try:
+        import TinyPICO_RGB
+        TinyPICO_RGB.off()
+    except:
+        print('TinyPICO_RGB.py module is not present')
+        pass
+
+def led(color):
+    try:
+        if color == 'red':
+            TinyPICO_RGB.solid(255,0,0)
+        elif color == 'blue':
+            TinyPICO_RGB.solid(0,0,255)
+        elif color == 'purple':
+            TinyPICO_RGB.solid(255,0,255)
+        else:
+            TinyPICO_RGB.off()
+    except:
+        pass  # If TinyPICO_RGB.py is missing do nothing
 
 # Load secrets from local key_store.db
 try:
@@ -62,7 +83,10 @@ try:
     ssid_name = key_store.get('ssid_name')
     ssid_pass = key_store.get('ssid_pass')
 except:
-    wdt_feed(WDT_CANCEL)
+    try:
+        wdt_feed(WDT_CANCEL)
+    except:
+        pass
     key_store.init()
     reset()
 
@@ -75,20 +99,18 @@ def wlan_connect(ssid, password):
         wlan.active(True)
         print('       MAC: ', hexlify(wlan.config('mac'),':').decode())
         print(' WiFi SSID: ', ssid)
+        led('purple')
         wlan.connect(ssid, password)
-        if 'TinyPICO' in uname().machine:
-            led.solid(255,0,255)  # Purple
         start_wifi = utime.ticks_ms()
         while not wlan.isconnected():
             if utime.ticks_diff(utime.ticks_ms(), start_wifi) > 20000:  # 20 second timeout
                 print('Wifi Timeout... Resetting Device')
                 reset()
+    led('blue')
     print('        IP: ', wlan.ifconfig()[0])
     print('    Subnet: ', wlan.ifconfig()[1])
     print('   Gateway: ', wlan.ifconfig()[2])
     print('       DNS: ', wlan.ifconfig()[3])
-    if 'TinyPICO' in uname().machine:
-        led.solid(0,0,255)  # Blue
     print()
 
 # Set RTC using NTP
@@ -126,8 +148,12 @@ def mem_stats():
     print('   Free Space   {:5,}KB'.format(int(fs_free/1024)))
 
 def filesystem():
-    from detect_filesystem import check
-    print('   File System ', check())
+    try:
+        from detect_filesystem import check
+        print('   File System ', check())
+    except:
+        print('detect_filesystem.py module is not present')
+        pass
 
 def list_files():
     from uos import listdir
@@ -142,17 +168,18 @@ try:
     wlan_connect(ssid_name, ssid_pass)
     ntp()          # Only needed if using HTTPS or local timestamp data logging 
     mem_stats()
-    filesystem()
+    filesystem()  # Detect FAT or littlefs filesystem
     list_files()
 except KeyboardInterrupt:
-    wdt_feed(WDT_CANCEL)  # Cancel/Disable Watchdog Timer when Ctrl+C pressed
-    if 'TinyPICO' in uname().machine:
-        led.off()
+    try:
+        wdt_feed(WDT_CANCEL)  # Cancel/Disable Watchdog Timer when Ctrl+C pressed
+    except:
+        pass
+    led('off')
     exit()
 except:
     print('ERROR... Resetting Device')
-    if 'TinyPICO' in uname().machine:
-        led.solid(255,0,0)  # Red
+    led('red')
     #utime.sleep(3)  # A chance to hit Ctrl+C in REPL
     reset()
 
@@ -161,4 +188,7 @@ print('=' * 45)
 print()
 
 # Disable boot.py watchdog timer
-wdt_feed(WDT_CANCEL)
+try:
+    wdt_feed(WDT_CANCEL)
+except:
+    pass
