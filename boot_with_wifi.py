@@ -13,9 +13,9 @@
 #     key_store.py
 #
 # Optional files:
-#     TinyPICO_RGB.py
 #     soft_wdt.py
 #     detect_filesystem.py
+#     TinyPICO_RGB.py
 #
 # Usage:
 #     $ pip3 install --user mpfshell
